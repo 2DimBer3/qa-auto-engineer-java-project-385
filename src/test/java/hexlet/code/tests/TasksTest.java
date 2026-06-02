@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TasksTest extends BaseTest {
 
@@ -23,7 +25,7 @@ public class TasksTest extends BaseTest {
     @Test
     public void testBoardDisplaysAllTasks() {
         // Откройте список задач и убедитесь, что загружаются все записи.
-        tasksPage. verifyBoardVisible();
+        tasksPage.verifyBoardVisible();
         assertFalse(tasksPage.getAllTaskNames().isEmpty(),
                 "На доске нет ни одной задачи");
     }
@@ -106,7 +108,8 @@ public class TasksTest extends BaseTest {
         String initialStatus = "Published";
         createTask(initialAssignee, initialTitle, initialStatus);
 
-        // Перетащите карточку в другой статус или используйте встроенные действия, затем проверьте, что отображаемый статус обновился.
+        // Перетащите карточку в другой статус или используйте встроенные действия,
+        // затем проверьте, что отображаемый статус обновился.
         TaskFormPage form = tasksPage.openEditTaskByName(initialTitle);
         String newStatus = "To Be Fixed";
         tasksPage = form.editStatusAndGoToBoard(newStatus);

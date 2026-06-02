@@ -13,9 +13,10 @@ public class InputHelper {
 
         // Нативный сеттер value, чтобы React зафиксировал изменение
         js.executeScript(
-                "var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;" +
-                        "nativeInputValueSetter.call(arguments[0], arguments[1]);" +
-                        "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));",
+                "var nativeInputValueSetter = "
+                        + "Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;"
+                        + "nativeInputValueSetter.call(arguments[0], arguments[1]);"
+                        + "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));",
                 element, inputText
         );
 
@@ -28,8 +29,8 @@ public class InputHelper {
 
         // Убираем фокус, чтобы форма валидировалась
         js.executeScript(
-                "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));" +
-                        "arguments[0].dispatchEvent(new Event('blur', { bubbles: true }));",
+                "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));"
+                        + "arguments[0].dispatchEvent(new Event('blur', { bubbles: true }));",
                 element
         );
     }

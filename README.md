@@ -2,6 +2,10 @@
 
 [![Actions Status](https://github.com/2DimBer3/qa-auto-engineer-java-project-385/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/2DimBer3/qa-auto-engineer-java-project-385/actions)
 
+### GitHub Actions for App
+
+[![Java CI with Gradle](https://github.com/2DimBer3/qa-auto-engineer-java-project-385/actions/workflows/gradle.yml/badge.svg)](https://github.com/2DimBer3/qa-auto-engineer-java-project-385/actions/workflows/gradle.yml)
+
 ### qa-auto-engineer-java-project-385
 
 Проект автоматизированного тестирования для веб-приложения **«Task manager»**. Написан на Java с использованием паттерна
