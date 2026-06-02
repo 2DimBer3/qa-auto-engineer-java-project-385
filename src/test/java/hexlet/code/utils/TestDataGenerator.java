@@ -2,6 +2,7 @@ package hexlet.code.utils;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+@SuppressWarnings("java:S2245")
 public final class TestDataGenerator {
 
     public static String randomLogin() {
