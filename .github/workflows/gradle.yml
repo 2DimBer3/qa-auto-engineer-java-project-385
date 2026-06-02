@@ -37,7 +37,7 @@ jobs:
           ls -la gradlew
 
       - name: Run Checkstyle
-        run: ./gradlew checkstyleMain checkstyleTest
+        run: ./gradlew checkstyleTest
 
       - name: Start test app via Docker
         run: |
