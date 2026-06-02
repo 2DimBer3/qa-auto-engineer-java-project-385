@@ -6,6 +6,19 @@
 
 [![Java CI with Gradle](https://github.com/2DimBer3/qa-auto-engineer-java-project-385/actions/workflows/gradle.yml/badge.svg)](https://github.com/2DimBer3/qa-auto-engineer-java-project-385/actions/workflows/gradle.yml)
 
+### Sonar badges
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=2DimBer3_qa-auto-engineer-java-project-385&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=2DimBer3_qa-auto-engineer-java-project-385)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=2DimBer3_qa-auto-engineer-java-project-385&metric=bugs)](https://sonarcloud.io/summary/new_code?id=2DimBer3_qa-auto-engineer-java-project-385)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=2DimBer3_qa-auto-engineer-java-project-385&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=2DimBer3_qa-auto-engineer-java-project-385)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=2DimBer3_qa-auto-engineer-java-project-385&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=2DimBer3_qa-auto-engineer-java-project-385)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=2DimBer3_qa-auto-engineer-java-project-385&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=2DimBer3_qa-auto-engineer-java-project-385)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=2DimBer3_qa-auto-engineer-java-project-385&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=2DimBer3_qa-auto-engineer-java-project-385)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=2DimBer3_qa-auto-engineer-java-project-385&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=2DimBer3_qa-auto-engineer-java-project-385)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=2DimBer3_qa-auto-engineer-java-project-385&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=2DimBer3_qa-auto-engineer-java-project-385)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=2DimBer3_qa-auto-engineer-java-project-385&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=2DimBer3_qa-auto-engineer-java-project-385)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=2DimBer3_qa-auto-engineer-java-project-385&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=2DimBer3_qa-auto-engineer-java-project-385)
+
 ### qa-auto-engineer-java-project-385
 
 Проект автоматизированного тестирования для веб-приложения **«Task manager»**. Написан на Java с использованием паттерна
