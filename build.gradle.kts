@@ -25,6 +25,9 @@ sonar {
     properties {
         property("sonar.projectKey", "2DimBer3_qa-auto-engineer-java-project-385")
         property("sonar.organization", "2dimber3")
+        property("sonar.sources", "src/test/java")
+        property("sonar.tests", "")
+        property("sonar.java.binaries", "build/classes/java/test")
     }
 }
 
