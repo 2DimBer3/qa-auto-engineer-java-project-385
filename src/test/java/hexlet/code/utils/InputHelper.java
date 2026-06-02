@@ -4,7 +4,10 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class InputHelper {
+public final class InputHelper {
+
+    private InputHelper() {
+    }
 
     public static void inputValue(WebDriver driver, WebElement element, String inputText) {
         element.click();
