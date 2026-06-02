@@ -21,7 +21,7 @@ public abstract class BasePage {
 
     protected void typeText(WebElement element, String text) {
         wait.until(ExpectedConditions.visibilityOf(element));
-        InputHelper.inputValue(element, text);
+        InputHelper.inputValue(driver, element, text);
     }
 
     protected void checkVisibility(WebElement element, String elementName) {
