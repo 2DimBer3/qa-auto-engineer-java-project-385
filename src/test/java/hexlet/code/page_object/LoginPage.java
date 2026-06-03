@@ -1,7 +1,5 @@
 package hexlet.code.page_object;
 
-import org.openqa.selenium.ElementClickInterceptedException;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -42,17 +40,8 @@ public class LoginPage extends BasePage {
         usernameField.sendKeys(username);
         passwordField.sendKeys(password);
         wait.until(ExpectedConditions.elementToBeClickable(loginButton));
-        clickLoginButton();
+        clickElementSafely(loginButton);
         wait.until(ExpectedConditions.invisibilityOf(loginButton));
         return new HomePage(driver);
-    }
-
-    private void clickLoginButton() {
-        try {
-            loginButton.click();
-        } catch (ElementClickInterceptedException e) {
-            // Клик через JavaScript, если обычный заблокирован наложением
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", loginButton);
-        }
     }
 }

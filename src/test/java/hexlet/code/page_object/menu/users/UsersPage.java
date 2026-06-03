@@ -14,7 +14,7 @@ import java.util.List;
 public class UsersPage extends HomePage {
 
     private static final String TABLE_ROWS_CSS = "[class~='RaDatagrid-selectable']";
-    private static final String ROW_CHECKBOX_CSS = "tbody [type='checkbox']";
+    private static final String ROW_CHECKBOX_CSS = "[aria-label='Select this row']";
     private static final String ALERT = ".MuiSnackbarContent-message";
 
     @FindBy(css = "[class~='RaDatagrid-table']")
@@ -41,7 +41,7 @@ public class UsersPage extends HomePage {
     @FindBy(css = "[href*='/users/create']")
     private WebElement createUserButton;
 
-    @FindBy(css = "[aria-label='Select all']")
+    @FindBy(css = ".select-all")
     private WebElement headCheckbox;
 
     @FindBy(css = "[aria-label='Delete']")
@@ -130,18 +130,16 @@ public class UsersPage extends HomePage {
     public void deleteLastUser() {
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
         WebElement lastRow = tableRows.getLast();
-        lastRow.findElement(By.cssSelector(ROW_CHECKBOX_CSS))
-                .click();
+        WebElement checkbox = lastRow.findElement(By.cssSelector(ROW_CHECKBOX_CSS));
 
-        wait.until(ExpectedConditions.elementToBeClickable(deleteButton))
-                .click();
+        clickElementSafely(checkbox);
+        clickElementSafely(deleteButton);
     }
 
     public void deleteAllUsers() {
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
 
-        headCheckbox.click();
-        wait.until(ExpectedConditions.elementToBeClickable(deleteButton))
-                .click();
+        clickElementSafely(headCheckbox);
+        clickElementSafely(deleteButton);
     }
 }

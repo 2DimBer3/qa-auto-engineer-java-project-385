@@ -1,6 +1,8 @@
 package hexlet.code.page_object;
 
 import hexlet.code.utils.InputHelper;
+import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -29,6 +31,17 @@ public abstract class BasePage {
             wait.until(ExpectedConditions.visibilityOf(element));
         } catch (TimeoutException e) {
             throw new IllegalStateException("Form element was not visible: " + elementName, e);
+        }
+    }
+
+    protected void clickElementSafely(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(element))
+                    .click();
+        } catch (ElementClickInterceptedException e) {
+            // Клик через JavaScript, если обычный заблокирован наложением
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
         }
     }
 }
