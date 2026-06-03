@@ -37,12 +37,7 @@
 
 Для работы с проектом потребуются **Docker** и **Java 21** (или новее).
 
-1. **Установите Docker**, если он ещё не установлен:
-    ```bash
-    # Например, для Ubuntu:
-    sudo apt update && sudo apt install docker.io
-    # Или скачайте с официального сайта: https://www.docker.com/products/docker-desktop/
-    ```
+1. **Установите Docker**, если он ещё не установлен (инструкция https://github.com/Hexlet/ru-instructions/blob/main/docker.md)
 2. Убедитесь, что установлена Java 21:
     ```bash
     java --version
