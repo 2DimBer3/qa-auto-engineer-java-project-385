@@ -18,6 +18,7 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:6.0.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.seleniumhq.selenium:selenium-java:4.40.0")
+    testImplementation("org.aeonbits.owner:owner:1.0.12")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -36,4 +37,7 @@ tasks.test {
     testLogging {
         events("passed", "skipped", "failed")
     }
+    systemProperties = System.getProperties().toMap()
+        .filterKeys { it is String }
+        .mapKeys { it.key as String }
 }

@@ -11,7 +11,7 @@ public class HomePageTest extends BaseTest {
 
     @Test
     public void testHomePageTitle() {
-        driver.get(baseUrl);
+        driver.get(config.baseUrl());
         String actualTitle = driver.getTitle();
         assertEquals("Task manager", actualTitle, "Заголовок страницы не совпадает");
     }

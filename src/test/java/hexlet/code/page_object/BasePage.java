@@ -1,5 +1,7 @@
 package hexlet.code.page_object;
 
+import hexlet.code.config.ConfigManager;
+import hexlet.code.config.TestConfig;
 import hexlet.code.utils.InputHelper;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
@@ -9,15 +11,18 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
 
 public abstract class BasePage {
     protected final WebDriver driver;
     protected final WebDriverWait wait;
 
+    private static final TestConfig CONFIG = ConfigManager.getConfig();
+
     protected BasePage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(CONFIG.defaultTimeout()));
         PageFactory.initElements(driver, this);
     }
 

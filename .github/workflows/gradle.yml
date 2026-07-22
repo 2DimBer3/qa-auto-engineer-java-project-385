@@ -52,7 +52,7 @@ jobs:
           done
 
       - name: Test with Gradle Wrapper
-        run: ./gradlew test
+        run: ./gradlew test -Denv=ci
 
       - name: SonarQube Analysis
         env:
