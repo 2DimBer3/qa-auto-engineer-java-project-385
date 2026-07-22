@@ -3,8 +3,7 @@ package hexlet.code.config;
 import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.Sources;
 
-@Sources({"classpath:config/${env}.properties",
-        "classpath:config/local.properties"})
+@Sources({"classpath:config/${env}.properties", "classpath:config/local.properties"})
 public interface TestConfig extends Config {
 
     String baseUrl();
