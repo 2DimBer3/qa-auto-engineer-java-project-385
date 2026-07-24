@@ -3,12 +3,12 @@ package hexlet.code.tests;
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.menu.tasks.TaskFormPage;
 import hexlet.code.page_object.menu.tasks.TasksPage;
+import hexlet.code.steps.LoginPageSteps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static hexlet.code.steps.HomePageSteps.performLogin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,11 +18,13 @@ public class TasksTest extends BaseTest {
     private static final String DEFAULT_ASSIGNEE_EMAIL = "michael@example.com";
     private static final String STATUS_PUBLISHED = "Published";
 
+    private final LoginPageSteps loginPageSteps = new LoginPageSteps();
+
     private TasksPage tasksPage;
 
     @BeforeEach
     public void loginAndGoToTasks() {
-        HomePage homePage = performLogin(config.userLogin(), config.userPassword());
+        HomePage homePage = loginPageSteps.performLogin(config.userLogin(), config.userPassword());
         tasksPage = homePage.openMenuTasks();
     }
 

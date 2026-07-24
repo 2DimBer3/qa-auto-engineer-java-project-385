@@ -3,21 +3,22 @@ package hexlet.code.tests;
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.menu.labels.LabelFormPage;
 import hexlet.code.page_object.menu.labels.LabelsPage;
+import hexlet.code.steps.LoginPageSteps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static hexlet.code.steps.HomePageSteps.performLogin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LabelsTest extends BaseTest {
 
+    private final LoginPageSteps loginPageSteps = new LoginPageSteps();
     private LabelsPage labelsPage;
 
     @BeforeEach
     public void loginAndGoToLabels() {
-        HomePage homePage = performLogin(config.userLogin(), config.userPassword());
+        HomePage homePage = loginPageSteps.performLogin(config.userLogin(), config.userPassword());
         labelsPage = homePage.openMenuLabels();
     }
 

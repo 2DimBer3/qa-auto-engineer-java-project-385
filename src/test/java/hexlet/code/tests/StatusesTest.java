@@ -3,21 +3,22 @@ package hexlet.code.tests;
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.menu.statuses.StatusFormPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
+import hexlet.code.steps.LoginPageSteps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static hexlet.code.steps.HomePageSteps.performLogin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StatusesTest extends BaseTest {
 
+    private final LoginPageSteps loginPageSteps = new LoginPageSteps();
     private TaskStatusesPage statusesPage;
 
     @BeforeEach
     public void loginAndGoToStatuses() {
-        HomePage homePage = performLogin(config.userLogin(), config.userPassword());
+        HomePage homePage = loginPageSteps.performLogin(config.userLogin(), config.userPassword());
         statusesPage = homePage.openMenuTaskStatuses();
     }
 
