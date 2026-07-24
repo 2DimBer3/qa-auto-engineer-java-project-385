@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static hexlet.code.steps.HomePageSteps.performLogin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,7 +22,7 @@ public class TasksTest extends BaseTest {
 
     @BeforeEach
     public void loginAndGoToTasks() {
-        HomePage homePage = performLogin();
+        HomePage homePage = performLogin(config.userLogin(), config.userPassword());
         tasksPage = homePage.openMenuTasks();
     }
 

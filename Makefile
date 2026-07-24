@@ -6,5 +6,11 @@ start-docker-app:
 test:
 	@gradlew clean test
 
+test-class:
+	@gradlew clean test --tests "hexlet.code.tests.HomePageTest"
+
 checkstyle:
 	@gradlew checkstyleTest
+
+allure:
+	@gradlew allureServe

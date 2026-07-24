@@ -6,6 +6,7 @@ import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static hexlet.code.steps.HomePageSteps.performLogin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -16,7 +17,7 @@ public class StatusesTest extends BaseTest {
 
     @BeforeEach
     public void loginAndGoToStatuses() {
-        HomePage homePage = performLogin();
+        HomePage homePage = performLogin(config.userLogin(), config.userPassword());
         statusesPage = homePage.openMenuTaskStatuses();
     }
 
