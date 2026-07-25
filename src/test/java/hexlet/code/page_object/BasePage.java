@@ -2,14 +2,9 @@ package hexlet.code.page_object;
 
 import hexlet.code.config.ConfigManager;
 import hexlet.code.config.TestConfig;
-import hexlet.code.utils.InputHelper;
-import org.openqa.selenium.ElementClickInterceptedException;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.TimeoutException;
+import hexlet.code.utils.ElementUtils;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -17,36 +12,14 @@ import java.time.Duration;
 public abstract class BasePage {
     protected final WebDriver driver;
     protected final WebDriverWait wait;
+    protected final ElementUtils element;
 
     private static final TestConfig CONFIG = ConfigManager.getConfig();
 
     protected BasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(CONFIG.defaultTimeout()));
+        this.element = new ElementUtils(driver, wait);
         PageFactory.initElements(driver, this);
-    }
-
-    protected void typeText(WebElement element, String text) {
-        wait.until(ExpectedConditions.visibilityOf(element));
-        InputHelper.inputValue(driver, element, text);
-    }
-
-    protected void checkVisibility(WebElement element, String elementName) {
-        try {
-            wait.until(ExpectedConditions.visibilityOf(element));
-        } catch (TimeoutException e) {
-            throw new IllegalStateException("Form element was not visible: " + elementName, e);
-        }
-    }
-
-    protected void clickElementSafely(WebElement element) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
-        try {
-            wait.until(ExpectedConditions.elementToBeClickable(element))
-                    .click();
-        } catch (ElementClickInterceptedException e) {
-            // Клик через JavaScript, если обычный заблокирован наложением
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
-        }
     }
 }

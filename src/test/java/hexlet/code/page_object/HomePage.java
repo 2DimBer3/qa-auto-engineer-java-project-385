@@ -39,55 +39,42 @@ public class HomePage extends BasePage {
     }
 
     public boolean isUserLoggedIn() {
-        try {
-            wait.until(ExpectedConditions.visibilityOf(profileButton));
-            return true;
-        } catch (TimeoutException e) {
-            return false;
-        }
+        return element.isDisplayed(profileButton, "Кнопка профиля");
     }
 
     public LoginPage logout() {
-        wait.until(ExpectedConditions.elementToBeClickable(profileButton))
-                .click();
-        wait.until(ExpectedConditions.elementToBeClickable(logoutButton))
-                .click();
+        element.click(profileButton, "Кнопка профиля");
+        element.click(logoutButton, "Кнопка выхода");
+
         return new LoginPage(driver);
     }
 
     public UsersPage openMenuUsers() {
-        wait.until(ExpectedConditions.elementToBeClickable(menuUsersButton))
-                .click();
-        wait.until(ExpectedConditions.attributeContains(menuUsersButton,
-                ATTRIBUTE_CLASS,
-                ACTIVE_MENU_ITEM_CLASS));
+        element.click(menuUsersButton, "Пункт меню 'Пользователи'");
+        element.attributeContains(menuUsersButton, ATTRIBUTE_CLASS,
+                ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Пользователи'");
+
         return new UsersPage(driver);
     }
 
     public TaskStatusesPage openMenuTaskStatuses() {
-        wait.until(ExpectedConditions.elementToBeClickable(menuTaskStatusesButton))
-                .click();
-        wait.until(ExpectedConditions.attributeContains(menuTaskStatusesButton,
-                ATTRIBUTE_CLASS,
-                ACTIVE_MENU_ITEM_CLASS));
+        element.click(menuTaskStatusesButton, "Пункт меню 'Статусы задач'");
+        element.attributeContains(menuTaskStatusesButton, ATTRIBUTE_CLASS,
+                ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Статусы задач'");
         return new TaskStatusesPage(driver);
     }
 
     public LabelsPage openMenuLabels() {
-        wait.until(ExpectedConditions.elementToBeClickable(menuLabelsButton))
-                .click();
-        wait.until(ExpectedConditions.attributeContains(menuLabelsButton,
-                ATTRIBUTE_CLASS,
-                ACTIVE_MENU_ITEM_CLASS));
+        element.click(menuLabelsButton, "Пункт меню 'Лейблы'");
+        element.attributeContains(menuLabelsButton, ATTRIBUTE_CLASS,
+                ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Лейблы'");
         return new LabelsPage(driver);
     }
 
     public TasksPage openMenuTasks() {
-        wait.until(ExpectedConditions.elementToBeClickable(menuTasksButton))
-                .click();
-        wait.until(ExpectedConditions.attributeContains(menuTasksButton,
-                ATTRIBUTE_CLASS,
-                ACTIVE_MENU_ITEM_CLASS));
+        element.click(menuTasksButton, "Пункт меню 'Задачи'");
+        element.attributeContains(menuTasksButton, ATTRIBUTE_CLASS,
+                ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Задачи'");
         return new TasksPage(driver);
     }
 }

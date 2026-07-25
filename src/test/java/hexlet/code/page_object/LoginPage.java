@@ -27,21 +27,16 @@ public class LoginPage extends BasePage {
     }
 
     public boolean isLoginPageDisplayed() {
-        try {
-            wait.until(ExpectedConditions.visibilityOf(loginButton));
-            return true;
-        } catch (TimeoutException e) {
-            return false;
-        }
+        return element.isDisplayed(loginButton, "Кнопка входа");
     }
 
     public HomePage login(String username, String password) {
-        checkVisibility(usernameField, "Username field");
-        usernameField.sendKeys(username);
-        passwordField.sendKeys(password);
-        wait.until(ExpectedConditions.elementToBeClickable(loginButton));
-        clickElementSafely(loginButton);
-        wait.until(ExpectedConditions.invisibilityOf(loginButton));
+        element.type(usernameField, username, "Поле логина");
+        element.type(passwordField, password, "Поле пароля");
+        element.click(loginButton, "Кнопка входа");
+
+        element.isHidden(loginButton, "Кнопка входа");
+
         return new HomePage(driver);
     }
 }
