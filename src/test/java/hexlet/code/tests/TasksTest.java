@@ -24,7 +24,7 @@ public class TasksTest extends BaseTest {
 
     @BeforeEach
     public void loginAndGoToTasks() {
-        HomePage homePage = loginPageSteps.performLogin(config.userLogin(), config.userPassword());
+        HomePage homePage = loginPageSteps.openPageAndLogin(config.userLogin(), config.userPassword());
         tasksPage = homePage.openMenuTasks();
     }
 

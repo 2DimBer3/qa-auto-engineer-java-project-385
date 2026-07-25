@@ -18,7 +18,7 @@ public class LabelsTest extends BaseTest {
 
     @BeforeEach
     public void loginAndGoToLabels() {
-        HomePage homePage = loginPageSteps.performLogin(config.userLogin(), config.userPassword());
+        HomePage homePage = loginPageSteps.openPageAndLogin(config.userLogin(), config.userPassword());
         labelsPage = homePage.openMenuLabels();
     }
 

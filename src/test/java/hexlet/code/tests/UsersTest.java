@@ -19,7 +19,7 @@ public class UsersTest extends BaseTest {
 
     @BeforeEach
     public void loginAndGoToUsers() {
-        HomePage homePage = loginPageSteps.performLogin(config.userLogin(), config.userPassword());
+        HomePage homePage = loginPageSteps.openPageAndLogin(config.userLogin(), config.userPassword());
         usersPage = homePage.openMenuUsers();
     }
 

@@ -13,7 +13,7 @@ public class HomePageTest extends BaseTest {
     @Test
     public void testLogout() {
         // Сначала входим
-        HomePage homePage = loginPageSteps.performLogin(config.userLogin(), config.userPassword());
+        HomePage homePage = loginPageSteps.openPageAndLogin(config.userLogin(), config.userPassword());
         LOG.debug("Авторизация прошла успешно");
 
         // Затем выходим

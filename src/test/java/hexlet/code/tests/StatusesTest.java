@@ -18,7 +18,7 @@ public class StatusesTest extends BaseTest {
 
     @BeforeEach
     public void loginAndGoToStatuses() {
-        HomePage homePage = loginPageSteps.performLogin(config.userLogin(), config.userPassword());
+        HomePage homePage = loginPageSteps.openPageAndLogin(config.userLogin(), config.userPassword());
         statusesPage = homePage.openMenuTaskStatuses();
     }
 
