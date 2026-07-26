@@ -20,4 +20,7 @@ public interface TestConfig extends Config {
 
     @DefaultValue("10")
     int defaultTimeout();
+
+    @DefaultValue("200")
+    int defaultSleep();
 }

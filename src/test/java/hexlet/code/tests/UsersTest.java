@@ -4,6 +4,7 @@ import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.menu.users.UserFormPage;
 import hexlet.code.page_object.menu.users.UsersPage;
 import hexlet.code.steps.LoginPageSteps;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,10 +27,11 @@ public class UsersTest extends BaseTest {
     @Test
     public void testUsersTableContains() {
         // Проверьте, что таблица пользователей загружается полностью.
-        usersPage.verifyUserTableVisible();
+        usersPage.isUserTableVisible();
+
 
         // Удостоверьтесь, что отображаются ключевые поля: Email, First name, Last name.
-        usersPage.verifyRequiredColumnsVisible();
+        usersPage.isRequiredColumnsVisible();
     }
 
     @Test

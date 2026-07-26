@@ -1,4 +1,4 @@
-package hexlet.code.utils;
+package hexlet.code.support.utils.element;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;

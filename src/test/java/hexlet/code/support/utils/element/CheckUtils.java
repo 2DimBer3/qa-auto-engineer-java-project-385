@@ -1,10 +1,12 @@
-package hexlet.code.utils;
+package hexlet.code.support.utils.element;
 
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class CheckUtils {
 
@@ -76,6 +78,17 @@ public class CheckUtils {
                     });
             return true;
         } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean waitForCollectionNotEmpty(List<WebElement> elements, String description) {
+        try {
+            wait.withMessage(String.format("Коллекция '%s' не стала непустой за %s секунд",
+                            description, driver.manage().timeouts().getImplicitWaitTimeout()))
+                    .until(d -> !elements.isEmpty());
+            return true;
+        } catch (TimeoutException e) {
             return false;
         }
     }

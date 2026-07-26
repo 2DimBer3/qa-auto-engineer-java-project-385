@@ -1,24 +1,32 @@
-package hexlet.code.utils;
+package hexlet.code.support.helper;
 
+import hexlet.code.support.utils.element.ActionUtils;
+import hexlet.code.support.utils.element.CheckUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
-public class ElementUtils {
+public class ElementHelper {
 
     private final ActionUtils actions;
     private final CheckUtils checks;
 
-    public ElementUtils(WebDriver driver, WebDriverWait wait) {
-        this.actions = new ActionUtils(driver, wait);
+    public ElementHelper(WebDriver driver, WebDriverWait wait) {
         this.checks = new CheckUtils(driver, wait);
+        this.actions = new ActionUtils(driver, wait, checks);
     }
 
     // Действия
     public void click(WebElement element, String elementName) {
         actions.click(element, elementName);
+    }
+
+    public void click(List<WebElement> elements, int index, String elementName) {
+        actions.click(elements, index, elementName);
     }
 
     public void type(WebElement element, String text, String elementName) {
@@ -48,5 +56,9 @@ public class ElementUtils {
 
     public boolean attributeContains(WebElement element, String attrName, String partialValue, String elementName) {
         return checks.attributeContains(element, attrName, partialValue, elementName);
+    }
+
+    public List<WebElement> findElements(By by, String description) {
+        return actions.findElements(by, description);
     }
 }

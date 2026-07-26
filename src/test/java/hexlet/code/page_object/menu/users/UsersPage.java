@@ -2,7 +2,6 @@ package hexlet.code.page_object.menu.users;
 
 import hexlet.code.page_object.HomePage;
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -10,12 +9,16 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
-@SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public class UsersPage extends HomePage {
 
     private static final String TABLE_ROWS_CSS = "[class~='RaDatagrid-selectable']";
     private static final String ROW_CHECKBOX_CSS = "[aria-label='Select this row']";
-    private static final String ALERT = ".MuiSnackbarContent-message";
+
+    private static final String EMAIL_CELL_CSS = "td.column-email";
+    private static final String FIRST_NAME_CELL_CSS = "td.column-firstName";
+    private static final String LAST_NAME_CELL_CSS = "td.column-lastName";
+
+    private static final String ALERT_CSS = ".MuiSnackbarContent-message";
 
     @FindBy(css = "[class~='RaDatagrid-table']")
     private WebElement usersTable;
@@ -48,70 +51,128 @@ public class UsersPage extends HomePage {
     private WebElement deleteButton;
 
     @FindBy(css = ".RaList-noResults")
-    private WebElement noResultsBlock;
+    private WebElement emptyResultsBlock;
+
+    @FindBy(css = ALERT_CSS)
+    private WebElement alert;
+
+    @FindBy(css = ROW_CHECKBOX_CSS)
+    private List<WebElement> rowCheckbox;
+
+    @FindBy(css = "td.column-email")
+    private List<WebElement> emailCells;
+
+    @FindBy(css = "td.column-firstName")
+    private List<WebElement> firstNameCells;
+
+    @FindBy(css = "td.column-lastName")
+    private List<WebElement> lastNameCells;
 
     public UsersPage(WebDriver driver) {
         super(driver);
     }
 
-    public void verifyUserTableVisible() {
-        checkVisibility(usersTable, "Table");
-        checkVisibility(tableHead, "Table Head");
-        checkVisibility(tableBody, "Table Body");
+    public boolean isUserTableVisible() {
+        return element.isDisplayed(usersTable, "Таблица пользователей")
+                && element.isDisplayed(tableHead, "Шапка таблицы")
+                && element.isDisplayed(tableBody, "Тело таблицы");
     }
 
-    public void verifyRequiredColumnsVisible() {
-        checkVisibility(emailColumn, "Email column");
-        checkVisibility(firstNameColumn, "First name column");
-        checkVisibility(lastNameColumn, "Last name column");
+    @Deprecated
+    public boolean isRequiredColumnsVisible() {
+        return element.isDisplayed(emailColumn, "Колонка Email")
+                && element.isDisplayed(firstNameColumn, "Колонка имён")
+                && element.isDisplayed(lastNameColumn, "Колонка фамилий");
     }
 
-    public void verifySuccessRowDeleteMessage() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT)));
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.cssSelector(ALERT), "Element deleted"));
+    public boolean isEmailColumnVisible() {
+        return element.isDisplayed(emailColumn, "Колонка Email");
     }
 
+    public boolean isFirstNameColumnVisible() {
+        return element.isDisplayed(firstNameColumn, "Колонка имён");
+    }
+
+    public boolean isLastNameColumnVisible() {
+        return element.isDisplayed(lastNameColumn, "Колонка фамилий");
+    }
+
+    @Deprecated
+    public boolean verifySuccessRowDeleteMessage() {
+        isAlertVisible();
+        return element.hasText(alert, "Element deleted", "Оповещение");
+    }
+
+    public boolean isAlertVisible() {
+        return element.isDisplayed(alert, "Оповещение");
+    }
+
+    public boolean hasAlertText(String text) {
+        return element.hasText(alert, text, "Оповещение");
+    }
+
+    @Deprecated
     public void verifySuccessSomeDeleteMessage(int numberRows) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT)));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT_CSS)));
         wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.cssSelector(ALERT), numberRows + " elements deleted"));
+                By.cssSelector(ALERT_CSS), numberRows + " elements deleted"));
     }
 
+    @Deprecated
     public void verifySuccessAllUsersDelete(int numberRows) {
         verifySuccessSomeDeleteMessage(numberRows);
 
-        checkVisibility(noResultsBlock, "noResultsBlock");
-        wait.until(ExpectedConditions.textToBePresentInElement(noResultsBlock, "No Users yet."));
-        wait.until(ExpectedConditions.textToBePresentInElement(noResultsBlock, "Do you want to add one?"));
+        checkVisibility(emptyResultsBlock, "noResultsBlock");
+        wait.until(ExpectedConditions.textToBePresentInElement(emptyResultsBlock, "No Users yet."));
+        wait.until(ExpectedConditions.textToBePresentInElement(emptyResultsBlock, "Do you want to add one?"));
+    }
+
+    public boolean isEmptyResultBlockVisible() {
+        return element.isDisplayed(emptyResultsBlock, "Пустой результирующий блок");
+    }
+
+    public boolean hasEmptyResultBlockText(String text) {
+        return element.hasText(emptyResultsBlock, text, "Пустой результирующий блок");
     }
 
     public int getUsersCount() {
-        wait.until(ExpectedConditions.visibilityOf(usersTable));
+        isUserTableVisible();
         return tableRows.size();
     }
 
+    @Deprecated
     public boolean isUserExist(String email, String firstName, String lastName) {
-        try {
-            return wait.until(driver -> {
-                List<WebElement> rows = driver.findElements(By.cssSelector(TABLE_ROWS_CSS));
-                return rows.stream().anyMatch(row -> {
-                    // ищем ячейки внутри строки row
-                    List<WebElement> emailCells = row.findElements(By.cssSelector("td.column-email"));
-                    List<WebElement> firstNameCells = row.findElements(By.cssSelector("td.column-firstName"));
-                    List<WebElement> lastNameCells = row.findElements(By.cssSelector("td.column-lastName"));
+        List<WebElement> rows = element.findElements(By.cssSelector(TABLE_ROWS_CSS),
+                "Таблица пользователей (строки)");
+        for (WebElement row : rows) {
+            String actualEmail = getCellText(row, EMAIL_CELL_CSS);
+            String actualFirstName = getCellText(row, FIRST_NAME_CELL_CSS);
+            String actualLastName = getCellText(row, LAST_NAME_CELL_CSS);
 
-                    // проверяем, что все три ячейки найдены и их текст совпадает
-                    return !emailCells.isEmpty() && emailCells.getFirst().getText().trim().equals(email)
-                            && !firstNameCells.isEmpty() && firstNameCells.getFirst().getText().trim().equals(firstName)
-                            && !lastNameCells.isEmpty() && lastNameCells.getFirst().getText().trim().equals(lastName);
-                });
-            });
-        } catch (TimeoutException e) {
-            return false;
+            if (email.equals(actualEmail) && firstName.equals(actualFirstName) && lastName.equals(actualLastName)) {
+                return true;
+            }
         }
+
+        return false;
     }
 
+    public String getEmailCellText(int numberRow) {
+        WebElement emailElement = emailCells.get(numberRow);
+        return element.getText(emailElement, "Ячейка Email");
+    }
+
+    public String getFirstNameCellText(int numberRow) {
+        WebElement firstNameElement = firstNameCells.get(numberRow);
+        return element.getText(firstNameElement, "Ячейка First Name");
+    }
+
+    public String getLastNameCellText(int numberRow) {
+        WebElement lastNameElement = lastNameCells.get(numberRow);
+        return element.getText(lastNameElement, "Ячейка Last Name");
+    }
+
+    @Deprecated
     public UserFormPage openCreateUserForm() {
         wait.until(ExpectedConditions.elementToBeClickable(createUserButton))
                 .click();
@@ -119,27 +180,60 @@ public class UsersPage extends HomePage {
         return new UserFormPage(driver);
     }
 
+    public UserFormPage clickCreateUser() {
+        element.click(createUserButton, "Создать пользователя");
+        return new UserFormPage(driver);
+    }
+
+    public boolean isUserTableHidden() {
+        return element.isHidden(usersTable, "Таблица пользователей")
+                && element.isHidden(tableHead, "Шапка таблицы")
+                && element.isHidden(tableBody, "Тело таблицы");
+    }
+
+    @Deprecated
     public UserFormPage openLastUser() {
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
+
         WebElement lastRow = tableRows.getLast();
         wait.until(ExpectedConditions.elementToBeClickable(lastRow))
                 .click();
         return new UserFormPage(driver);
     }
 
+    public UserFormPage clickUser(int numberUserRow) {
+        element.click(tableRows, numberUserRow - 1, "Пользователь");
+        return new UserFormPage(driver);
+    }
+
+    @Deprecated
     public void deleteLastUser() {
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
+
         WebElement lastRow = tableRows.getLast();
-        WebElement checkbox = lastRow.findElement(By.cssSelector(ROW_CHECKBOX_CSS));
+        WebElement checkbox = lastRow.findElement(By.cssSelector(rowCheckboxCss));
 
         clickElementSafely(checkbox);
         clickElementSafely(deleteButton);
     }
 
+    public void clickRowCheckBox(int numberUserRow) {
+        element.click(rowCheckbox, numberUserRow - 1, "Чек-бокс строки");
+    }
+
+    public void clickDelete() {
+        element.click(deleteButton, "Удалить");
+    }
+
+    @Deprecated
     public void deleteAllUsers() {
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
 
         clickElementSafely(headCheckbox);
         clickElementSafely(deleteButton);
+    }
+
+    public void clickHeadCheckBox(int numberUserRow) {
+        element.click(headCheckbox, "Чек-бокс шапки таблицы");
     }
 }
