@@ -61,6 +61,7 @@ public class HomePage extends BasePage {
         element.click(menuTaskStatusesButton, "Пункт меню 'Статусы задач'");
         element.attributeContains(menuTaskStatusesButton, ATTRIBUTE_CLASS,
                 ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Статусы задач'");
+
         return new TaskStatusesPage(driver);
     }
 
@@ -68,6 +69,7 @@ public class HomePage extends BasePage {
         element.click(menuLabelsButton, "Пункт меню 'Лейблы'");
         element.attributeContains(menuLabelsButton, ATTRIBUTE_CLASS,
                 ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Лейблы'");
+
         return new LabelsPage(driver);
     }
 
@@ -75,6 +77,7 @@ public class HomePage extends BasePage {
         element.click(menuTasksButton, "Пункт меню 'Задачи'");
         element.attributeContains(menuTasksButton, ATTRIBUTE_CLASS,
                 ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Задачи'");
+
         return new TasksPage(driver);
     }
 }
