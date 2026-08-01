@@ -1,11 +1,9 @@
 package hexlet.code.page_object.menu.users;
 
 import hexlet.code.page_object.HomePage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
@@ -17,8 +15,6 @@ public class UsersPage extends HomePage {
     private static final String EMAIL_CELL_CSS = "td.column-email";
     private static final String FIRST_NAME_CELL_CSS = "td.column-firstName";
     private static final String LAST_NAME_CELL_CSS = "td.column-lastName";
-
-    private static final String ALERT_CSS = ".MuiSnackbarContent-message";
 
     @FindBy(css = "[class~='RaDatagrid-table']")
     private WebElement usersTable;
@@ -53,9 +49,6 @@ public class UsersPage extends HomePage {
     @FindBy(css = ".RaList-noResults")
     private WebElement emptyResultsBlock;
 
-    @FindBy(css = ALERT_CSS)
-    private WebElement alert;
-
     @FindBy(css = ROW_CHECKBOX_CSS)
     private List<WebElement> rowCheckbox;
 
@@ -73,16 +66,15 @@ public class UsersPage extends HomePage {
     }
 
     public boolean isUserTableVisible() {
-        return element.isDisplayed(usersTable, "Таблица пользователей")
-                && element.isDisplayed(tableHead, "Шапка таблицы")
-                && element.isDisplayed(tableBody, "Тело таблицы");
+        return element.isDisplayed(usersTable, "Таблица пользователей");
     }
 
-    @Deprecated
-    public boolean isRequiredColumnsVisible() {
-        return element.isDisplayed(emailColumn, "Колонка Email")
-                && element.isDisplayed(firstNameColumn, "Колонка имён")
-                && element.isDisplayed(lastNameColumn, "Колонка фамилий");
+    public boolean isTableHeadVisible() {
+        return element.isDisplayed(tableHead, "Шапка таблицы");
+    }
+
+    public boolean isTableBodyVisible() {
+        return element.isDisplayed(tableBody, "Тело таблицы");
     }
 
     public boolean isEmailColumnVisible() {
@@ -97,40 +89,6 @@ public class UsersPage extends HomePage {
         return element.isDisplayed(lastNameColumn, "Колонка фамилий");
     }
 
-    @Deprecated
-    public boolean verifySuccessRowDeleteMessage() {
-        isAlertVisible();
-        return element.hasText(alert, "Element deleted", "Оповещение");
-    }
-
-    public boolean isAlertVisible() {
-        return element.isDisplayed(alert, "Оповещение");
-    }
-
-    public boolean hasAlertText(String text) {
-        return element.hasText(alert, text, "Оповещение");
-    }
-
-    @Deprecated
-    public void verifySuccessSomeDeleteMessage(int numberRows) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT_CSS)));
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.cssSelector(ALERT_CSS), numberRows + " elements deleted"));
-    }
-
-    @Deprecated
-    public void verifySuccessAllUsersDelete(int numberRows) {
-        verifySuccessSomeDeleteMessage(numberRows);
-
-        checkVisibility(emptyResultsBlock, "noResultsBlock");
-        wait.until(ExpectedConditions.textToBePresentInElement(emptyResultsBlock, "No Users yet."));
-        wait.until(ExpectedConditions.textToBePresentInElement(emptyResultsBlock, "Do you want to add one?"));
-    }
-
-    public boolean isEmptyResultBlockVisible() {
-        return element.isDisplayed(emptyResultsBlock, "Пустой результирующий блок");
-    }
-
     public boolean hasEmptyResultBlockText(String text) {
         return element.hasText(emptyResultsBlock, text, "Пустой результирующий блок");
     }
@@ -138,23 +96,6 @@ public class UsersPage extends HomePage {
     public int getUsersCount() {
         isUserTableVisible();
         return tableRows.size();
-    }
-
-    @Deprecated
-    public boolean isUserExist(String email, String firstName, String lastName) {
-        List<WebElement> rows = element.findElements(By.cssSelector(TABLE_ROWS_CSS),
-                "Таблица пользователей (строки)");
-        for (WebElement row : rows) {
-            String actualEmail = getCellText(row, EMAIL_CELL_CSS);
-            String actualFirstName = getCellText(row, FIRST_NAME_CELL_CSS);
-            String actualLastName = getCellText(row, LAST_NAME_CELL_CSS);
-
-            if (email.equals(actualEmail) && firstName.equals(actualFirstName) && lastName.equals(actualLastName)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public String getEmailCellText(int numberRow) {
@@ -172,49 +113,14 @@ public class UsersPage extends HomePage {
         return element.getText(lastNameElement, "Ячейка Last Name");
     }
 
-    @Deprecated
-    public UserFormPage openCreateUserForm() {
-        wait.until(ExpectedConditions.elementToBeClickable(createUserButton))
-                .click();
-        wait.until(ExpectedConditions.invisibilityOf(usersTable));
-        return new UserFormPage(driver);
-    }
-
-    public UserFormPage clickCreateUser() {
+    public UserCreatePage clickCreateUser() {
         element.click(createUserButton, "Создать пользователя");
-        return new UserFormPage(driver);
+        return new UserCreatePage(driver);
     }
 
-    public boolean isUserTableHidden() {
-        return element.isHidden(usersTable, "Таблица пользователей")
-                && element.isHidden(tableHead, "Шапка таблицы")
-                && element.isHidden(tableBody, "Тело таблицы");
-    }
-
-    @Deprecated
-    public UserFormPage openLastUser() {
-        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
-
-        WebElement lastRow = tableRows.getLast();
-        wait.until(ExpectedConditions.elementToBeClickable(lastRow))
-                .click();
-        return new UserFormPage(driver);
-    }
-
-    public UserFormPage clickUser(int numberUserRow) {
+    public UserCreatePage clickUser(int numberUserRow) {
         element.click(tableRows, numberUserRow - 1, "Пользователь");
-        return new UserFormPage(driver);
-    }
-
-    @Deprecated
-    public void deleteLastUser() {
-        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
-
-        WebElement lastRow = tableRows.getLast();
-        WebElement checkbox = lastRow.findElement(By.cssSelector(rowCheckboxCss));
-
-        clickElementSafely(checkbox);
-        clickElementSafely(deleteButton);
+        return new UserCreatePage(driver);
     }
 
     public void clickRowCheckBox(int numberUserRow) {
@@ -225,15 +131,7 @@ public class UsersPage extends HomePage {
         element.click(deleteButton, "Удалить");
     }
 
-    @Deprecated
-    public void deleteAllUsers() {
-        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
-
-        clickElementSafely(headCheckbox);
-        clickElementSafely(deleteButton);
-    }
-
-    public void clickHeadCheckBox(int numberUserRow) {
+    public void clickHeadCheckBox() {
         element.click(headCheckbox, "Чек-бокс шапки таблицы");
     }
 }

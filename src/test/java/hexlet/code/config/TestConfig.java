@@ -23,4 +23,7 @@ public interface TestConfig extends Config {
 
     @DefaultValue("200")
     int defaultSleep();
+
+    @DefaultValue("/users/create")
+    String userCreateEndpoint();
 }

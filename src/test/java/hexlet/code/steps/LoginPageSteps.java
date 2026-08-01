@@ -14,16 +14,20 @@ public class LoginPageSteps {
     private LoginPage loginPage;
 
     @Step("Открыть страницу авторизации")
-    public void openPage() {
+    public LoginPage openPage() {
         WebDriver driver = DriverFactory.getDriver();
         loginPage = new LoginPage(driver);
         loginPage.open(ConfigManager.getConfig()
                 .baseUrl());
+        return loginPage;
     }
 
     @Step("Авторизоваться под учётной записью")
-    public HomePage performLogin(String login, String password) {
-        return loginPage.login(login, password);
+    public HomePage performLogin(String username, String password) {
+        loginPage.typeUsername(username);
+        loginPage.typePassword(password);
+
+        return loginPage.clickLogin();
     }
 
     @Step("Открыть страницу авторизации и войти под учётной записью")
@@ -33,7 +37,8 @@ public class LoginPageSteps {
     }
 
     @Step("Проверить, что открыта страница авторизации")
-    public void assertPageDisplayed() {
+    public void assertPageOpen(LoginPage loginPage) {
+        this.loginPage = loginPage;
         assertTrue(loginPage.isLoginPageDisplayed(), "Страница входа не открыта");
     }
 

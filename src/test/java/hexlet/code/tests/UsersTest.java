@@ -1,57 +1,63 @@
 package hexlet.code.tests;
 
 import hexlet.code.page_object.HomePage;
-import hexlet.code.page_object.menu.users.UserFormPage;
+import hexlet.code.page_object.menu.users.UserCreatePage;
 import hexlet.code.page_object.menu.users.UsersPage;
+import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
-import org.junit.jupiter.api.Assertions;
+import hexlet.code.steps.CreateUserPageSteps;
+import hexlet.code.steps.UsersPageSteps;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static hexlet.code.steps.CommonPageSteps.assertValueField;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UsersTest extends BaseTest {
 
     private final LoginPageSteps loginPageSteps = new LoginPageSteps();
+    private final HomePageSteps homePageSteps = new HomePageSteps();
+    private final UsersPageSteps usersPageSteps = new UsersPageSteps();
+    private final CreateUserPageSteps createUserPageSteps = new CreateUserPageSteps();
 
-    private UsersPage usersPage;
 
     @BeforeEach
     public void loginAndGoToUsers() {
         HomePage homePage = loginPageSteps.openPageAndLogin(config.userLogin(), config.userPassword());
-        usersPage = homePage.openMenuUsers();
+        homePageSteps.assertPageOpen(homePage);
+        UsersPage usersPage = homePageSteps.openMenuUsers();
+        usersPageSteps.assertUsersPageOpen(usersPage);
     }
 
     @Test
     public void testUsersTableContains() {
         // Проверьте, что таблица пользователей загружается полностью.
-        usersPage.isUserTableVisible();
-
+        usersPageSteps.assertUserTableFullLoad();
 
         // Удостоверьтесь, что отображаются ключевые поля: Email, First name, Last name.
-        usersPage.isRequiredColumnsVisible();
+        usersPageSteps.assertRequiredColumnsVisible();
     }
 
     @Test
     public void testCreateUser() {
-        int countBefore = usersPage.getUsersCount();
-        UserFormPage userFormPage = usersPage.openCreateUserForm();
+        int countBefore = usersPageSteps.rememberUsersCount();
+
+        UserCreatePage userCreatePage = usersPageSteps.openCreateUserPage();
+        createUserPageSteps.assertCreateUserPageOpen(userCreatePage);
 
         // Убедитесь, что форма создания открывается корректно.
-        userFormPage.verifyFormElementsVisible();
+        createUserPageSteps.assertCreateUserFormElementsVisible();
 
         //Заполните данные нового пользователя и проверьте, что карточка появляется в списке.
         String email = "dima@example.com";
         String firstName = "Dima";
         String lastName = "Bell";
-        usersPage = userFormPage.createUserAndGoToList(email, firstName, lastName);
+        UsersPage usersPage = createUserPageSteps.fillFormAndSave(email, firstName, lastName);
 
-        assertTrue(usersPage.isUserExist(email, firstName, lastName),
-                "Новый пользователь в списке не появился");
-        assertEquals(countBefore + 1, usersPage.getUsersCount(),
-                "Количество пользователей не увеличилось на 1");
+        usersPageSteps.assertUsersPageOpen(usersPage);
+        usersPageSteps.assertNumberUsers(countBefore + 1);
+        usersPageSteps.assertUserExist(email, firstName, lastName);
     }
 
     @Test
@@ -63,29 +69,21 @@ public class UsersTest extends BaseTest {
         createUser(initialEmail, initialFirstName, initialLastName);
 
         // Откройте форму редактирования и убедитесь, что данные подставляются верно.
-        UserFormPage userFormPage = usersPage.openLastUser();
+        UserCreatePage userCreatePage = usersPageSteps.openEditLastUserForm();
 
-        assertEquals(initialEmail, userFormPage.getEmailValue(),
-                "Email из таблицы не совпадает с Email из формы редактирования");
-        assertEquals(initialFirstName, userFormPage.getFirstNameValue(),
-                "First name из таблицы не совпадает с First name из формы редактирования");
-        assertEquals(initialLastName, userFormPage.getLastNameValue(),
-                "Last name из таблицы не совпадает с Last name из формы редактирования");
+        assertValueField(initialEmail, userCreatePage.getEmailValue(), "Email");
+        assertValueField(initialFirstName, userCreatePage.getFirstNameValue(), "First name");
+        assertValueField(initialLastName, userCreatePage.getLastNameValue(), "Last name");
 
         //Измените значения и проверьте, что обновления сохранены.
         String newEmail = "alice@example.com";
         String newFirstName = "Alice";
         String newLastName = "Smith";
-        usersPage = userFormPage.editUserAndGoToList(newEmail, newFirstName, newLastName);
+        UsersPage usersPage = createUserPageSteps.fillFormAndSave(newEmail, newFirstName, newLastName);
 
-        assertTrue(usersPage.isUserExist(newEmail, newFirstName, newLastName),
-                "После редактирования у пользователя не отображаются новые значения: " + newEmail + ", "
-                        + newFirstName + ", "
-                        + newLastName);
-        assertFalse(usersPage.isUserExist(initialEmail, initialFirstName, initialLastName),
-                "После редактирования у пользователя отображаются начальные значения: " + initialEmail + ", "
-                        + initialFirstName + ", "
-                        + initialLastName);
+        usersPageSteps.assertUsersPageOpen(usersPage);
+        usersPageSteps.assertUserExist(newEmail, newFirstName, newLastName);
+        usersPageSteps.assertUserNotExist(initialEmail, initialFirstName, initialLastName);
     }
 
     @Test
@@ -94,13 +92,13 @@ public class UsersTest extends BaseTest {
         createUser("test@example.com", "Test", "User");
 
         // Дополнительно проверьте валидацию, в частности формат email.
-        UserFormPage userFormPage = usersPage.openLastUser();
-        userFormPage.enterEmail("efd");
-        userFormPage.clickSave();
-        userFormPage.verifyValidationErrorMessage(
-                "The form is not valid. Please check for errors",
-                "Incorrect email format"
-        );
+        UserCreatePage userCreatePage = usersPageSteps.openEditLastUserForm();
+        createUserPageSteps.assertCreateUserPageOpen(userCreatePage);
+        createUserPageSteps.fillEmailField("efd");
+        createUserPageSteps.clickSave();
+
+        createUserPageSteps.assertAlertVisibleWithText("The form is not valid. Please check for errors");
+        createUserPageSteps.assertFieldWithError("Email", "Incorrect email format");
     }
 
     @Test
@@ -112,32 +110,33 @@ public class UsersTest extends BaseTest {
         createUser(email, firstName, lastName);
 
         // Удалите одного или нескольких пользователей и подтвердите, что их больше нет в списке.
-        int countBefore = usersPage.getUsersCount();
-        usersPage.deleteLastUser();
-        usersPage.verifySuccessRowDeleteMessage();
+        int countBefore = usersPageSteps.rememberUsersCount();
+        usersPageSteps.deleteUser(countBefore);
+        homePageSteps.assertAlertVisibleWithText("Element deleted");
 
-        assertFalse(usersPage.isUserExist(email, firstName, lastName),
-                "Пользователь не удалён");
-        assertEquals(countBefore - 1, usersPage.getUsersCount(),
-                "Количество пользователей не уменьшилось на 1");
+        usersPageSteps.assertNumberUsers(countBefore - 1);
+        usersPageSteps.assertUserNotExist(email, firstName, lastName);
     }
 
     @Test
     public void testDeleteAllUsers() {
         // Убедимся, что есть хотя бы один пользователь
-        if (usersPage.getUsersCount() == 0) {
+        int countUsers = usersPageSteps.rememberUsersCount();
+        if (countUsers == 0) {
             createUser("max@example.com", "Max", "Jordan");
         }
-        int countBefore = usersPage.getUsersCount();
 
         // Выделите всех пользователей целиком.
         // Удалите выбранные записи и проверьте, что список очищен.
-        usersPage.deleteAllUsers();
-        usersPage.verifySuccessAllUsersDelete(countBefore);
+        usersPageSteps.deleteAllUsers();
+        usersPageSteps.assertAllUsersDelete();
     }
 
+    @Step("Создать пользователя")
     private void createUser(String email, String firstName, String lastName) {
-        UserFormPage form = usersPage.openCreateUserForm();
-        usersPage = form.createUserAndGoToList(email, firstName, lastName);
+        UserCreatePage form = usersPageSteps.openCreateUserPage();
+        createUserPageSteps.assertCreateUserPageOpen(form);
+        UsersPage usersPage = createUserPageSteps.fillFormAndSave(email, firstName, lastName);
+        usersPageSteps.assertUsersPageOpen(usersPage);
     }
 }

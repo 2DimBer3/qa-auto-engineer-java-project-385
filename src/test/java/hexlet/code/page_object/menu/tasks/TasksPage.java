@@ -24,7 +24,6 @@ public class TasksPage extends HomePage {
     private static final String OPTION_FILTER = "[role='option']";
     private static final String DATA_SOURCE_TEMPLATE = "[data-source='%s']";
     private static final String COLUMN_ANCESTOR = "ancestor::div[@data-rfd-droppable-id]/..";
-    private static final String ALERT = ".MuiSnackbarContent-message";
 
     @FindBy(css = "a[href='#/tasks/create']")
     private WebElement createTaskButton;
@@ -88,9 +87,9 @@ public class TasksPage extends HomePage {
     }
 
     public void verifySuccessDeleteMessage() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT)));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT_CSS)));
         wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.cssSelector(ALERT), "Element deleted"));
+                By.cssSelector(ALERT_CSS), "Element deleted"));
     }
 
     public void verifyAllCardsInColumn(String columnName) {

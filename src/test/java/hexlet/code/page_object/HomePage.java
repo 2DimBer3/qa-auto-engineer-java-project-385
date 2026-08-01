@@ -15,6 +15,7 @@ public class HomePage extends BasePage {
 
     private static final String ATTRIBUTE_CLASS = "class";
     private static final String ACTIVE_MENU_ITEM_CLASS = "RaMenuItemLink-active";
+    protected static final String ALERT_CSS = ".MuiSnackbarContent-message";
 
     @FindBy(css = "[class~='RaUserMenu-userButton']")
     private WebElement profileButton;
@@ -34,12 +35,36 @@ public class HomePage extends BasePage {
     @FindBy(css = "[href$='tasks']")
     private WebElement menuTasksButton;
 
+    @FindBy(css = ALERT_CSS)
+    protected WebElement alert;
+
     public HomePage(WebDriver driver) {
         super(driver);
     }
 
+    public boolean isAlertVisible() {
+        return element.isDisplayed(alert, "Оповещение");
+    }
+
+    public boolean hasAlertText(String text) {
+        return element.hasText(alert, text, "Оповещение");
+    }
+
     public boolean isUserLoggedIn() {
         return element.isDisplayed(profileButton, "Кнопка профиля");
+    }
+
+    public String getPageUrl() {
+        return element.getPageUrl();
+    }
+
+    public void clickProfile() {
+        element.click(profileButton, "Кнопка профиля");
+    }
+
+    public LoginPage clickLogout() {
+        element.click(logoutButton, "Кнопка выхода");
+        return new LoginPage(driver);
     }
 
     public LoginPage logout() {

@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ActionUtils {
@@ -76,6 +77,12 @@ public class ActionUtils {
         return element.getText().trim();
     }
 
+    public String getValue(WebElement element, String elementName) {
+        wait.withMessage(String.format("Элемент '%s' не отобразился для получения значения из value", elementName))
+                .until(d -> element.isDisplayed());
+        return Objects.requireNonNull(element.getAttribute("value")).trim();
+    }
+
     public List<WebElement> findElements(By by, String description) {
         AtomicInteger prevSize = new AtomicInteger(-1);
 
@@ -98,5 +105,9 @@ public class ActionUtils {
                     prevSize.set(size);
                     return null;
                 });
+    }
+
+    public String getPageUrl() {
+        return driver.getCurrentUrl();
     }
 }

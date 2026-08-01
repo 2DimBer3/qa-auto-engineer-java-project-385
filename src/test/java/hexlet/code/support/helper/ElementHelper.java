@@ -37,6 +37,14 @@ public class ElementHelper {
         return actions.getText(element, elementName);
     }
 
+    public String getValue(WebElement element, String elementName) {
+        return actions.getValue(element, elementName);
+    }
+
+    public String getPageUrl() {
+        return actions.getPageUrl();
+    }
+
     // Проверки
     public boolean isDisplayed(WebElement element, String elementName) {
         return checks.isDisplayed(element, elementName);

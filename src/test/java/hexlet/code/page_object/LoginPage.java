@@ -1,10 +1,8 @@
 package hexlet.code.page_object;
 
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @SuppressWarnings("unused")
 public class LoginPage extends BasePage {
@@ -30,13 +28,16 @@ public class LoginPage extends BasePage {
         return element.isDisplayed(loginButton, "Кнопка входа");
     }
 
-    public HomePage login(String username, String password) {
+    public void typeUsername(String username) {
         element.type(usernameField, username, "Поле логина");
+    }
+
+    public void typePassword(String password) {
         element.type(passwordField, password, "Поле пароля");
+    }
+
+    public HomePage clickLogin() {
         element.click(loginButton, "Кнопка входа");
-
-        element.isHidden(loginButton, "Кнопка входа");
-
         return new HomePage(driver);
     }
 }
