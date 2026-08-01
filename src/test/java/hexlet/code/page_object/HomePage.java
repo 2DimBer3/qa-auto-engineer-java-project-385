@@ -4,11 +4,9 @@ import hexlet.code.page_object.menu.labels.LabelsPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
 import hexlet.code.page_object.menu.tasks.TasksPage;
 import hexlet.code.page_object.menu.users.UsersPage;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @SuppressWarnings("unused")
 public class HomePage extends BasePage {
