@@ -7,7 +7,6 @@ import hexlet.code.steps.LoginPageSteps;
 import org.junit.jupiter.api.Test;
 
 import static hexlet.code.steps.CommonPageSteps.assertPageTitle;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginPageTest extends BaseTest {
 
