@@ -1,7 +1,7 @@
 package hexlet.code.tests;
 
 import hexlet.code.page_object.HomePage;
-import hexlet.code.page_object.menu.users.UserCreatePage;
+import hexlet.code.page_object.menu.users.CreateUserPage;
 import hexlet.code.page_object.menu.users.UsersPage;
 import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
@@ -43,8 +43,8 @@ public class UsersTest extends BaseTest {
     public void testCreateUser() {
         int countBefore = usersPageSteps.rememberUsersCount();
 
-        UserCreatePage userCreatePage = usersPageSteps.openCreateUserPage();
-        createUserPageSteps.assertCreateUserPageOpen(userCreatePage);
+        CreateUserPage createUserPage = usersPageSteps.openCreateUserPage();
+        createUserPageSteps.assertCreateUserPageOpen(createUserPage);
 
         // Убедитесь, что форма создания открывается корректно.
         createUserPageSteps.assertCreateUserFormElementsVisible();
@@ -69,11 +69,11 @@ public class UsersTest extends BaseTest {
         createUser(initialEmail, initialFirstName, initialLastName);
 
         // Откройте форму редактирования и убедитесь, что данные подставляются верно.
-        UserCreatePage userCreatePage = usersPageSteps.openEditLastUserForm();
+        CreateUserPage createUserPage = usersPageSteps.openEditLastUserForm();
 
-        assertValueField(initialEmail, userCreatePage.getEmailValue(), "Email");
-        assertValueField(initialFirstName, userCreatePage.getFirstNameValue(), "First name");
-        assertValueField(initialLastName, userCreatePage.getLastNameValue(), "Last name");
+        assertValueField(initialEmail, createUserPage.getEmailValue(), "Email");
+        assertValueField(initialFirstName, createUserPage.getFirstNameValue(), "First name");
+        assertValueField(initialLastName, createUserPage.getLastNameValue(), "Last name");
 
         //Измените значения и проверьте, что обновления сохранены.
         String newEmail = "alice@example.com";
@@ -92,8 +92,8 @@ public class UsersTest extends BaseTest {
         createUser("test@example.com", "Test", "User");
 
         // Дополнительно проверьте валидацию, в частности формат email.
-        UserCreatePage userCreatePage = usersPageSteps.openEditLastUserForm();
-        createUserPageSteps.assertCreateUserPageOpen(userCreatePage);
+        CreateUserPage createUserPage = usersPageSteps.openEditLastUserForm();
+        createUserPageSteps.assertCreateUserPageOpen(createUserPage);
         createUserPageSteps.fillEmailField("efd");
         createUserPageSteps.clickSave();
 
@@ -134,7 +134,7 @@ public class UsersTest extends BaseTest {
 
     @Step("Создать пользователя")
     private void createUser(String email, String firstName, String lastName) {
-        UserCreatePage form = usersPageSteps.openCreateUserPage();
+        CreateUserPage form = usersPageSteps.openCreateUserPage();
         createUserPageSteps.assertCreateUserPageOpen(form);
         UsersPage usersPage = createUserPageSteps.fillFormAndSave(email, firstName, lastName);
         usersPageSteps.assertUsersPageOpen(usersPage);

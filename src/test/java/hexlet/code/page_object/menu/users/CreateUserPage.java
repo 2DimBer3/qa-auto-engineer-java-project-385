@@ -5,7 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class UserCreatePage extends HomePage {
+public class CreateUserPage extends HomePage {
 
     @FindBy(css = "[name='email']")
     private WebElement emailInput;
@@ -22,7 +22,7 @@ public class UserCreatePage extends HomePage {
     @FindBy(css = "p.Mui-error")
     private WebElement errorBlock;
 
-    public UserCreatePage(WebDriver driver) {
+    public CreateUserPage(WebDriver driver) {
         super(driver);
     }
 
@@ -36,6 +36,10 @@ public class UserCreatePage extends HomePage {
 
     public boolean isLastNameInputVisible() {
         return element.isDisplayed(lastNameInput, "Last name");
+    }
+
+    public boolean isSaveButtonVisible() {
+        return element.isDisplayed(saveButton, "Last name");
     }
 
     public void typeEmail(String email) {

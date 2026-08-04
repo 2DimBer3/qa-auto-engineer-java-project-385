@@ -1,6 +1,6 @@
 package hexlet.code.steps;
 
-import hexlet.code.page_object.menu.users.UserCreatePage;
+import hexlet.code.page_object.menu.users.CreateUserPage;
 import hexlet.code.page_object.menu.users.UsersPage;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -18,17 +18,17 @@ public class UsersPageSteps extends HomePageSteps {
     }
 
     @Step("Открыть форму создания пользователя")
-    public UserCreatePage openCreateUserPage() {
+    public CreateUserPage openCreateUserPage() {
         return usersPage.clickCreateUser();
     }
 
     @Step("Открыть форму редактирования пользователя {userNumber}")
-    public UserCreatePage openEditUserForm(int userNumber) {
+    public CreateUserPage openEditUserForm(int userNumber) {
         return usersPage.clickUser(userNumber);
     }
     
     @Step("Открыть форму редактирования последнего пользователя")
-    public UserCreatePage openEditLastUserForm() {
+    public CreateUserPage openEditLastUserForm() {
         int userCount = usersPage.getUsersCount();
         return openEditUserForm(userCount);
     }

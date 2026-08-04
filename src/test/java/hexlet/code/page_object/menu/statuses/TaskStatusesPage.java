@@ -10,12 +10,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
-@SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public class TaskStatusesPage extends HomePage {
 
     private static final String TABLE_ROWS_CSS = "[class~='RaDatagrid-selectable']";
     private static final String ROW_CHECKBOX_CSS = "tbody [type='checkbox']";
-    private static final String ALERT_CSS = ".MuiSnackbarContent-message";
 
     @FindBy(css = "[class~='RaDatagrid-table']")
     private WebElement statusesTable;
@@ -35,6 +33,15 @@ public class TaskStatusesPage extends HomePage {
     @FindBy(css = "th[class~='column-slug']")
     private WebElement slugColumn;
 
+    @FindBy(css = "td.column-name")
+    private List<WebElement> nameCells;
+
+    @FindBy(css = "td.column-slug")
+    private List<WebElement> slugCells;
+
+    @FindBy(css = "[aria-label='Select this row']")
+    private List<WebElement> rowCheckbox;
+
     @FindBy(css = "[href*='/task_statuses/create']")
     private WebElement createStatusButton;
 
@@ -44,85 +51,72 @@ public class TaskStatusesPage extends HomePage {
     @FindBy(css = "[aria-label='Delete']")
     private WebElement deleteButton;
 
-    @FindBy(css = ".MuiSnackbarContent-message")
-    private WebElement alert;
-
     @FindBy(css = ".RaList-noResults")
-    private WebElement noResultsBlock;
+    private WebElement emptyResultsBlock;
 
     public TaskStatusesPage(WebDriver driver) {
         super(driver);
     }
 
-    public void verifyTableVisible() {
-        checkVisibility(statusesTable, "Statuses table");
-        checkVisibility(tableHead, "Table head");
-        checkVisibility(tableBody, "Table body");
+    public boolean isStatusTableVisible() {
+        return element.isDisplayed(statusesTable, "Таблица статусов");
     }
 
-    public void verifyRequiredColumnsVisible() {
-        checkVisibility(nameColumn, "Name column");
-        checkVisibility(slugColumn, "Slug column");
+    public boolean isTableHeadVisible() {
+        return element.isDisplayed(tableHead, "Шапка таблицы");
     }
 
-    public void verifySuccessRowDeleteMessage() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT_CSS)));
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.cssSelector(ALERT_CSS), "Element deleted"));
+    public boolean isTableBodyVisible() {
+        return element.isDisplayed(tableBody, "Тело таблицы");
     }
 
-    public void verifySuccessSomeDeleteMessage(int numberRows) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT_CSS)));
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.cssSelector(ALERT_CSS), numberRows + " elements deleted"));
+    public boolean isNameColumnVisible() {
+        return element.isDisplayed(nameColumn, "Колонка Name");
     }
 
-    public void verifySuccessAllStatusesDelete(int numberRows) {
-        verifySuccessSomeDeleteMessage(numberRows);
+    public boolean isSlugColumnVisible() {
+        return element.isDisplayed(slugColumn, "Колонка Slug");
+    }
 
-        checkVisibility(noResultsBlock, "noResultsBlock");
-        wait.until(ExpectedConditions.textToBePresentInElement(noResultsBlock, "No Task statuses yet."));
-        wait.until(ExpectedConditions.textToBePresentInElement(noResultsBlock, "Do you want to add one?"));
+    public boolean hasEmptyResultBlockText(String text) {
+        return element.hasText(emptyResultsBlock, text, "Пустой результирующий блок");
     }
 
     public int getStatusesCount() {
-        wait.until(ExpectedConditions.visibilityOf(statusesTable));
+        isStatusTableVisible();
         return tableRows.size();
     }
 
-    public boolean isStatusExist(String name, String slug) {
-        try {
-            return wait.until(driver -> {
-                List<WebElement> rows = driver.findElements(By.cssSelector(TABLE_ROWS_CSS));
-                return rows.stream().anyMatch(row -> {
-                    // ищем ячейки внутри строки row
-                    List<WebElement> nameCells = row.findElements(By.cssSelector("td.column-name"));
-                    List<WebElement> slugCells = row.findElements(By.cssSelector("td.column-slug"));
-
-                    // проверяем, что все три ячейки найдены и их текст совпадает
-                    return !nameCells.isEmpty() && nameCells.getFirst().getText().trim().equals(name)
-                            && !slugCells.isEmpty() && slugCells.getFirst().getText().trim().equals(slug);
-                });
-            });
-        } catch (TimeoutException e) {
-            return false;
-        }
+    public String getNameCellText(int numberRow) {
+        WebElement nameElement = nameCells.get(numberRow);
+        return element.getText(nameElement, "Ячейка Name");
     }
 
-    public StatusFormPage openCreateStatusForm() {
-        wait.until(ExpectedConditions.elementToBeClickable(createStatusButton)).click();
-        wait.until(ExpectedConditions.invisibilityOf(statusesTable));
-        return new StatusFormPage(driver);
+    public String getSlugCellText(int numberRow) {
+        WebElement slugElement = slugCells.get(numberRow);
+        return element.getText(slugElement, "Ячейка Slug");
     }
 
-    public StatusFormPage openLastStatus() {
+    public CreateStatusPage clickCreateStatus() {
+        element.click(createStatusButton, "Создать статус");
+        return new CreateStatusPage(driver);
+    }
+
+    @Deprecated
+    public CreateStatusPage openLastStatus() {
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(
                 By.cssSelector(TABLE_ROWS_CSS), 0));
         WebElement lastRow = tableRows.getLast();
         wait.until(ExpectedConditions.elementToBeClickable(lastRow)).click();
-        return new StatusFormPage(driver);
+        return new CreateStatusPage(driver);
     }
 
+    public CreateStatusPage clickStatus(int numberUserRow) {
+        element.click(tableRows, numberUserRow - 1, "Статус");
+        return new CreateStatusPage(driver);
+    }
+
+    @Deprecated
     public void deleteLastStatus() {
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
         WebElement lastRow = tableRows.getLast();
@@ -133,11 +127,24 @@ public class TaskStatusesPage extends HomePage {
                 .click();
     }
 
+    public void clickRowCheckBox(int numberUserRow) {
+        element.click(rowCheckbox, numberUserRow - 1, "Чек-бокс строки");
+    }
+
+    public void clickDelete() {
+        element.click(deleteButton, "Удалить");
+    }
+
+    @Deprecated
     public void deleteAllStatuses() {
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
 
         headCheckbox.click();
         wait.until(ExpectedConditions.elementToBeClickable(deleteButton))
                 .click();
+    }
+
+    public void clickHeadCheckBox() {
+        element.click(headCheckbox, "Чек-бокс шапки таблицы");
     }
 }

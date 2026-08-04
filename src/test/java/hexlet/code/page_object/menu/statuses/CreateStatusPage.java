@@ -7,10 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-@SuppressWarnings("unused")
-public class StatusFormPage extends HomePage {
-
-    private static final String ALERT = ".MuiSnackbarContent-message";
+public class CreateStatusPage extends HomePage {
 
     @FindBy(css = "input[name='name']")
     private WebElement nameInput;
@@ -21,52 +18,68 @@ public class StatusFormPage extends HomePage {
     @FindBy(css = "button[type='submit']")
     private WebElement saveButton;
 
-    public StatusFormPage(WebDriver driver) {
+    public CreateStatusPage(WebDriver driver) {
         super(driver);
     }
 
-    public void fillName(String name) {
-        typeText(nameInput, name);
+    public void typeName(String name) {
+        element.type(nameInput, name, "Name");
     }
 
-    public void fillSlug(String slug) {
-        typeText(slugInput, slug);
+    public void typeSlug(String slug) {
+        element.type(slugInput, slug, "Slug");
     }
 
     public void clickSave() {
-        wait.until(ExpectedConditions.elementToBeClickable(saveButton))
-                .click();
+        element.click(saveButton, "Сохранить");
     }
 
+    @Deprecated
     public void verifyFormElementsVisible() {
         checkVisibility(nameInput, "Name");
         checkVisibility(slugInput, "Slug");
         checkVisibility(saveButton, "Save");
     }
 
+    public boolean isNameInputVisible() {
+        return element.isDisplayed(nameInput, "Name");
+    }
+
+    public boolean isSlugInputVisible() {
+        return element.isDisplayed(slugInput, "Slug");
+    }
+
+    public boolean isSaveButtonVisible() {
+        return element.isDisplayed(saveButton, "Save");
+    }
+
+    @Deprecated
     public void verifySuccessCreateMessage() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT)));
         wait.until(ExpectedConditions.textToBePresentInElementLocated(
                 By.cssSelector(ALERT), "Element created"));
     }
 
+    @Deprecated
     public void verifySuccessEditMessage() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT)));
         wait.until(ExpectedConditions.textToBePresentInElementLocated(
                 By.cssSelector(ALERT), "Element updated"));
     }
 
+    @Deprecated
     public TaskStatusesPage createStatusAndGoToList(String name, String slug) {
-        fillName(name);
-        fillSlug(slug);
+        typeName(name);
+        typeSlug(slug);
         clickSave();
         verifySuccessCreateMessage();
         return openMenuTaskStatuses();
     }
 
+    @Deprecated
     public TaskStatusesPage editStatusAndGoToList(String newName, String newSlug) {
-        fillName(newName);
-        fillSlug(newSlug);
+        typeName(newName);
+        typeSlug(newSlug);
         clickSave();
         verifySuccessEditMessage();
         return new TaskStatusesPage(driver);

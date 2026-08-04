@@ -106,14 +106,14 @@ public class UsersPage extends HomePage {
         return element.getText(lastNameElement, "Ячейка Last Name");
     }
 
-    public UserCreatePage clickCreateUser() {
+    public CreateUserPage clickCreateUser() {
         element.click(createUserButton, "Создать пользователя");
-        return new UserCreatePage(driver);
+        return new CreateUserPage(driver);
     }
 
-    public UserCreatePage clickUser(int numberUserRow) {
+    public CreateUserPage clickUser(int numberUserRow) {
         element.click(tableRows, numberUserRow - 1, "Пользователь");
-        return new UserCreatePage(driver);
+        return new CreateUserPage(driver);
     }
 
     public void clickRowCheckBox(int numberUserRow) {
