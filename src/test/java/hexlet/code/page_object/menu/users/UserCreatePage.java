@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-@SuppressWarnings("unused")
 public class UserCreatePage extends HomePage {
 
     @FindBy(css = "[name='email']")
@@ -39,10 +38,6 @@ public class UserCreatePage extends HomePage {
         return element.isDisplayed(lastNameInput, "Last name");
     }
 
-    public boolean isSaveButtonVisible() {
-        return element.isDisplayed(saveButton, "Save");
-    }
-
     public void typeEmail(String email) {
         element.type(saveButton, email, "Email");
     }
@@ -69,10 +64,6 @@ public class UserCreatePage extends HomePage {
 
     public String getLastNameValue() {
         return element.getValue(lastNameInput, "Last name");
-    }
-
-    public boolean isErrorBlockVisible() {
-        return element.isDisplayed(errorBlock, "Блок с ошибкой");
     }
 
     public boolean hasErrorBlockText(String expectedText) {
