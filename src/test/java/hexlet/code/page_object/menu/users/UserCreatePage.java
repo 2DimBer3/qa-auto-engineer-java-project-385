@@ -8,9 +8,6 @@ import org.openqa.selenium.support.FindBy;
 @SuppressWarnings("unused")
 public class UserCreatePage extends HomePage {
 
-    private static final String ATTRIBUTE_VALUE = "value";
-    private static final String ALERT = ".MuiSnackbarContent-message";
-
     @FindBy(css = "[name='email']")
     private WebElement emailInput;
 

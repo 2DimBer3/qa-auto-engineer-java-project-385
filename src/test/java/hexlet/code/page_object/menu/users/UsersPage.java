@@ -9,13 +9,6 @@ import java.util.List;
 
 public class UsersPage extends HomePage {
 
-    private static final String TABLE_ROWS_CSS = "[class~='RaDatagrid-selectable']";
-    private static final String ROW_CHECKBOX_CSS = "[aria-label='Select this row']";
-
-    private static final String EMAIL_CELL_CSS = "td.column-email";
-    private static final String FIRST_NAME_CELL_CSS = "td.column-firstName";
-    private static final String LAST_NAME_CELL_CSS = "td.column-lastName";
-
     @FindBy(css = "[class~='RaDatagrid-table']")
     private WebElement usersTable;
 
@@ -25,7 +18,7 @@ public class UsersPage extends HomePage {
     @FindBy(css = "[class~='RaDatagrid-tbody']")
     private WebElement tableBody;
 
-    @FindBy(css = TABLE_ROWS_CSS)
+    @FindBy(css = "[class~='RaDatagrid-selectable']")
     private List<WebElement> tableRows;
 
     @FindBy(css = "th[class~='column-email']")
@@ -49,7 +42,7 @@ public class UsersPage extends HomePage {
     @FindBy(css = ".RaList-noResults")
     private WebElement emptyResultsBlock;
 
-    @FindBy(css = ROW_CHECKBOX_CSS)
+    @FindBy(css = "[aria-label='Select this row']")
     private List<WebElement> rowCheckbox;
 
     @FindBy(css = "td.column-email")
