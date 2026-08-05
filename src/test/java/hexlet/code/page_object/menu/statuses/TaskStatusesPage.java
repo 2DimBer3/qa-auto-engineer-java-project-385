@@ -1,19 +1,13 @@
 package hexlet.code.page_object.menu.statuses;
 
 import hexlet.code.page_object.HomePage;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
 public class TaskStatusesPage extends HomePage {
-
-    private static final String TABLE_ROWS_CSS = "[class~='RaDatagrid-selectable']";
-    private static final String ROW_CHECKBOX_CSS = "tbody [type='checkbox']";
 
     @FindBy(css = "[class~='RaDatagrid-table']")
     private WebElement statusesTable;
@@ -24,7 +18,7 @@ public class TaskStatusesPage extends HomePage {
     @FindBy(css = "[class~='RaDatagrid-tbody']")
     private WebElement tableBody;
 
-    @FindBy(css = TABLE_ROWS_CSS)
+    @FindBy(css = "[class~='RaDatagrid-selectable']")
     private List<WebElement> tableRows;
 
     @FindBy(css = "th[class~='column-name']")
@@ -102,29 +96,9 @@ public class TaskStatusesPage extends HomePage {
         return new CreateStatusPage(driver);
     }
 
-    @Deprecated
-    public CreateStatusPage openLastStatus() {
-        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(
-                By.cssSelector(TABLE_ROWS_CSS), 0));
-        WebElement lastRow = tableRows.getLast();
-        wait.until(ExpectedConditions.elementToBeClickable(lastRow)).click();
-        return new CreateStatusPage(driver);
-    }
-
     public CreateStatusPage clickStatus(int numberUserRow) {
         element.click(tableRows, numberUserRow - 1, "Статус");
         return new CreateStatusPage(driver);
-    }
-
-    @Deprecated
-    public void deleteLastStatus() {
-        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
-        WebElement lastRow = tableRows.getLast();
-        lastRow.findElement(By.cssSelector(ROW_CHECKBOX_CSS))
-                .click();
-
-        wait.until(ExpectedConditions.elementToBeClickable(deleteButton))
-                .click();
     }
 
     public void clickRowCheckBox(int numberUserRow) {
@@ -133,15 +107,6 @@ public class TaskStatusesPage extends HomePage {
 
     public void clickDelete() {
         element.click(deleteButton, "Удалить");
-    }
-
-    @Deprecated
-    public void deleteAllStatuses() {
-        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector(TABLE_ROWS_CSS), 0));
-
-        headCheckbox.click();
-        wait.until(ExpectedConditions.elementToBeClickable(deleteButton))
-                .click();
     }
 
     public void clickHeadCheckBox() {

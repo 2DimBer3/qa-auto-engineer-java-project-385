@@ -2,7 +2,6 @@ package hexlet.code.steps;
 
 import hexlet.code.page_object.menu.statuses.CreateStatusPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
-import hexlet.code.page_object.menu.users.CreateUserPage;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
@@ -11,8 +10,8 @@ public class TaskStatusesPageSteps extends HomePageSteps {
 
     private TaskStatusesPage taskStatusesPage;
 
-    @Step("Запомнить количество статусов в таблице")
-    public int rememberStatusesCount() {
+    @Step("Посчитать количество статусов в таблице")
+    public int countNumberStatuses() {
         int statusesCount = taskStatusesPage.getStatusesCount();
         Allure.addAttachment("Количество статусов", String.valueOf(statusesCount));
         return statusesCount;
@@ -23,15 +22,15 @@ public class TaskStatusesPageSteps extends HomePageSteps {
         return taskStatusesPage.clickCreateStatus();
     }
 
-    @Step("Открыть форму редактирования пользователя {userNumber}")
-    public CreateUserPage openEditUserForm(int userNumber) {
-        return usersPage.clickUser(userNumber);
+    @Step("Открыть форму редактирования статуса со строки №{userNumber}")
+    public CreateStatusPage openEditStatusForm(int rowNumber) {
+        return taskStatusesPage.clickStatus(rowNumber);
     }
     
-    @Step("Открыть форму редактирования последнего пользователя")
-    public CreateUserPage openEditLastUserForm() {
-        int userCount = usersPage.getUsersCount();
-        return openEditUserForm(userCount);
+    @Step("Открыть форму редактирования последнего статуса")
+    public CreateStatusPage openEditLastStatusForm() {
+        int statusesCount = taskStatusesPage.getStatusesCount();
+        return openEditStatusForm(statusesCount);
     }
 
     @Step("Удалить статус со строки под номером {numberRow}")
@@ -51,8 +50,7 @@ public class TaskStatusesPageSteps extends HomePageSteps {
         this.taskStatusesPage = taskStatusesPage;
         boolean isOpen = taskStatusesPage.isStatusTableVisible();
 
-        Assertions.assertTrue(isOpen,
-                "Страница Task Statuses не открыта");
+        Assertions.assertTrue(isOpen, "Страница Task Statuses не открыта");
     }
 
     @Step("Проверить, что таблица статусов задач загружается полностью.")
@@ -110,8 +108,7 @@ public class TaskStatusesPageSteps extends HomePageSteps {
     public void assertNumberStatuses(int expectedCount) {
         int actualCount = taskStatusesPage.getStatusesCount();
 
-        Assertions.assertEquals(expectedCount, actualCount,
-                "Количество статусов = " + actualCount);
+        Assertions.assertEquals(expectedCount, actualCount, "Количество статусов = " + actualCount);
     }
 
     @Step("Проверить, что все статусы удалены")
@@ -119,7 +116,6 @@ public class TaskStatusesPageSteps extends HomePageSteps {
         boolean hasText = taskStatusesPage.hasEmptyResultBlockText("No Task statuses yet.")
                 && taskStatusesPage.hasEmptyResultBlockText("Do you want to add one?");
 
-        Assertions.assertTrue(hasText,
-                "Удалены не все статусы");
+        Assertions.assertTrue(hasText, "Удалены не все статусы");
     }
 }

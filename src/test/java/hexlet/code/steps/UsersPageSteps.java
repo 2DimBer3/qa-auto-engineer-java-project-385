@@ -10,8 +10,8 @@ public class UsersPageSteps extends HomePageSteps {
 
     private UsersPage usersPage;
 
-    @Step("Запомнить количество пользователей в таблице")
-    public int rememberUsersCount() {
+    @Step("Посчитать количество пользователей в таблице")
+    public int countNumberUsers() {
         int userCount = usersPage.getUsersCount();
         Allure.addAttachment("Количество пользователей", String.valueOf(userCount));
         return userCount;
@@ -22,7 +22,7 @@ public class UsersPageSteps extends HomePageSteps {
         return usersPage.clickCreateUser();
     }
 
-    @Step("Открыть форму редактирования пользователя {userNumber}")
+    @Step("Открыть форму редактирования пользователя со строки №{userNumber}")
     public CreateUserPage openEditUserForm(int userNumber) {
         return usersPage.clickUser(userNumber);
     }

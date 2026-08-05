@@ -3,16 +3,12 @@ package hexlet.code.tests;
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.menu.statuses.CreateStatusPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
-import hexlet.code.page_object.menu.users.CreateUserPage;
+import hexlet.code.steps.CreateStatusPageSteps;
 import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
 import hexlet.code.steps.TaskStatusesPageSteps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TaskStatusesTest extends BaseTest {
 
@@ -20,8 +16,6 @@ public class TaskStatusesTest extends BaseTest {
     private final HomePageSteps homePageSteps = new HomePageSteps();
     private final TaskStatusesPageSteps statusSteps = new TaskStatusesPageSteps();
     private final CreateStatusPageSteps createStatusSteps = new CreateStatusPageSteps();
-
-    TaskStatusesPage statusesPage;
 
     @BeforeEach
     public void loginAndGoToStatuses() {
@@ -42,20 +36,20 @@ public class TaskStatusesTest extends BaseTest {
 
     @Test
     public void testCreateStatus() {
-        int countBefore = statusSteps.rememberStatusesCount();
+        int countBefore = statusSteps.countNumberStatuses();
 
         CreateStatusPage createStatusPage = statusSteps.openCreateUserPage();
-        createStatusSteps.assertCreateUserPageOpen(createStatusPage);
+        createStatusSteps.assertCreateStatusPageOpen(createStatusPage);
 
         // Проверьте, что форма добавления открывается и отображает нужные поля.
-        statusForm.verifyFormElementsVisible();
+        createStatusSteps.assertCreateStatusFormElementsVisible();
 
         // Заполните название и slug, подтвердите создание и убедитесь, что запись появилась в списке.
         String name = "In Progress";
         String slug = "in_progress";
-        statusesPage = statusForm.createStatusAndGoToList(name, slug);
+        TaskStatusesPage taskStatusesPage = createStatusSteps.fillFormAndSave(name, slug);
 
-        statusSteps.assertTaskStatusesPageOpen(statusesPage);
+        statusSteps.assertTaskStatusesPageOpen(taskStatusesPage);
         statusSteps.assertNumberStatuses(countBefore + 1);
         statusSteps.assertStatusExist(name, slug);
     }
@@ -68,13 +62,14 @@ public class TaskStatusesTest extends BaseTest {
         createStatus(initialName, initialSlug);
 
         // Откройте форму редактирования, измените данные и убедитесь, что обновления сохранены.
-        CreateStatusPage statusForm = statusesPage.openLastStatus();
+        CreateStatusPage createStatusPage = statusSteps.openEditLastStatusForm();
+        createStatusSteps.assertCreateStatusPageOpen(createStatusPage);
 
         String newName = "Updated";
         String newSlug = "updated";
-        statusesPage = statusForm.editStatusAndGoToList(newName, newSlug);
+        TaskStatusesPage taskStatusesPage = createStatusSteps.fillFormAndSave(newName, newSlug);
 
-        statusSteps.assertTaskStatusesPageOpen(statusesPage);
+        statusSteps.assertTaskStatusesPageOpen(taskStatusesPage);
         statusSteps.assertStatusExist(newName, newSlug);
         statusSteps.assertStatusNotExist(initialName, initialSlug);
     }
@@ -87,7 +82,7 @@ public class TaskStatusesTest extends BaseTest {
         createStatus(name, slug);
 
         // Удалите один или несколько статусов и проверьте, что они исчезли из списка.
-        int countBefore = statusSteps.rememberStatusesCount();
+        int countBefore = statusSteps.countNumberStatuses();
         statusSteps.deleteStatus(countBefore);
         homePageSteps.assertAlertVisibleWithText("Element deleted");
 
@@ -98,8 +93,8 @@ public class TaskStatusesTest extends BaseTest {
     @Test
     public void testDeleteAllStatuses() {
         // Убедимся, что есть хотя бы один пользователь
-        int countBefore = statusesPage.getStatusesCount();
-        if (countBefore == 0) {
+        int countStatuses = statusSteps.countNumberStatuses();
+        if (countStatuses == 0) {
             createStatus("All Delete", "all_delete");
         }
 
@@ -110,8 +105,9 @@ public class TaskStatusesTest extends BaseTest {
 
     private void createStatus(String name, String slug) {
         CreateStatusPage createStatusPage = statusSteps.openCreateUserPage();
-        createStatusSteps.assertCreateUserPageOpen(createStatusPage);
+        createStatusSteps.assertCreateStatusPageOpen(createStatusPage);
 
-        statusesPage = form.createStatusAndGoToList(name, slug);
+        TaskStatusesPage taskStatusesPage = createStatusSteps.fillFormAndSave(name, slug);
+        statusSteps.assertTaskStatusesPageOpen(taskStatusesPage);
     }
 }

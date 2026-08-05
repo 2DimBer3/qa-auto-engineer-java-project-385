@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static hexlet.code.steps.CommonPageSteps.assertValueField;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UsersTest extends BaseTest {
 
@@ -41,7 +40,7 @@ public class UsersTest extends BaseTest {
 
     @Test
     public void testCreateUser() {
-        int countBefore = usersPageSteps.rememberUsersCount();
+        int countBefore = usersPageSteps.countNumberUsers();
 
         CreateUserPage createUserPage = usersPageSteps.openCreateUserPage();
         createUserPageSteps.assertCreateUserPageOpen(createUserPage);
@@ -70,6 +69,7 @@ public class UsersTest extends BaseTest {
 
         // Откройте форму редактирования и убедитесь, что данные подставляются верно.
         CreateUserPage createUserPage = usersPageSteps.openEditLastUserForm();
+        createUserPageSteps.assertCreateUserPageOpen(createUserPage);
 
         assertValueField(initialEmail, createUserPage.getEmailValue(), "Email");
         assertValueField(initialFirstName, createUserPage.getFirstNameValue(), "First name");
@@ -110,7 +110,7 @@ public class UsersTest extends BaseTest {
         createUser(email, firstName, lastName);
 
         // Удалите одного или нескольких пользователей и подтвердите, что их больше нет в списке.
-        int countBefore = usersPageSteps.rememberUsersCount();
+        int countBefore = usersPageSteps.countNumberUsers();
         usersPageSteps.deleteUser(countBefore);
         homePageSteps.assertAlertVisibleWithText("Element deleted");
 
@@ -121,7 +121,7 @@ public class UsersTest extends BaseTest {
     @Test
     public void testDeleteAllUsers() {
         // Убедимся, что есть хотя бы один пользователь
-        int countUsers = usersPageSteps.rememberUsersCount();
+        int countUsers = usersPageSteps.countNumberUsers();
         if (countUsers == 0) {
             createUser("max@example.com", "Max", "Jordan");
         }
@@ -136,6 +136,7 @@ public class UsersTest extends BaseTest {
     private void createUser(String email, String firstName, String lastName) {
         CreateUserPage form = usersPageSteps.openCreateUserPage();
         createUserPageSteps.assertCreateUserPageOpen(form);
+
         UsersPage usersPage = createUserPageSteps.fillFormAndSave(email, firstName, lastName);
         usersPageSteps.assertUsersPageOpen(usersPage);
     }
