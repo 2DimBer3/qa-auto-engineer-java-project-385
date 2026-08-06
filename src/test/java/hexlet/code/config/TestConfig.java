@@ -29,4 +29,7 @@ public interface TestConfig extends Config {
 
     @DefaultValue("/task_statuses/create")
     String statusCreateEndpoint();
+
+    @DefaultValue("/labels/create")
+    String labelCreateEndpoint();
 }

@@ -3,10 +3,10 @@ package hexlet.code.tests;
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.menu.statuses.CreateStatusPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
-import hexlet.code.steps.CreateStatusPageSteps;
+import hexlet.code.steps.statuses.CreateStatusPageSteps;
 import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
-import hexlet.code.steps.TaskStatusesPageSteps;
+import hexlet.code.steps.statuses.TaskStatusesPageSteps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

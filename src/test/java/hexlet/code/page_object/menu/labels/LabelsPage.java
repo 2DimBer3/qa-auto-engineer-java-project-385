@@ -1,21 +1,13 @@
 package hexlet.code.page_object.menu.labels;
 
 import hexlet.code.page_object.HomePage;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
-@SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public class LabelsPage extends HomePage {
-
-    private static final String TABLE_ROWS_CSS = "[class~='RaDatagrid-selectable']";
-    private static final String ROW_CHECKBOX_CSS = "tbody [type='checkbox']";
-    private static final String ALERT = ".MuiSnackbarContent-message";
 
     @FindBy(css = "[class~='RaDatagrid-table']")
     private WebElement labelsTable;
@@ -26,20 +18,26 @@ public class LabelsPage extends HomePage {
     @FindBy(css = "[class~='RaDatagrid-tbody']")
     private WebElement tableBody;
 
-    @FindBy(css = TABLE_ROWS_CSS)
+    @FindBy(css = "[class~='RaDatagrid-selectable']")
     private List<WebElement> tableRows;
 
     @FindBy(css = "th[class~='column-name']")
     private WebElement nameColumn;
 
     @FindBy(css = "th[class~='column-id']")
-    private WebElement id;
+    private WebElement idColumn;
 
     @FindBy(css = "th[class~='column-createdAt']")
-    private WebElement createdAt;
+    private WebElement createdAtColumn;
+
+    @FindBy(css = "td.column-name")
+    private List<WebElement> nameCells;
 
     @FindBy(css = "[href*='/labels/create']")
     private WebElement createLabelButton;
+
+    @FindBy(css = "[aria-label='Select this row']")
+    private List<WebElement> rowCheckbox;
 
     @FindBy(css = "[aria-label='Delete']")
     private WebElement deleteButton;
@@ -48,69 +46,55 @@ public class LabelsPage extends HomePage {
         super(driver);
     }
 
-    public void verifyTableVisible() {
-        checkVisibility(labelsTable, "Labels table");
-        checkVisibility(tableHead, "Table head");
-        checkVisibility(tableBody, "Table body");
+    public boolean isLabelTableVisible() {
+        return element.isDisplayed(labelsTable, "Таблица лейблов");
     }
 
-    public void verifyRequiredColumnsVisible() {
-        checkVisibility(nameColumn, "Name column");
-        checkVisibility(id, "Id");
-        checkVisibility(createdAt, "Created at");
+    public boolean isTableHeadVisible() {
+        return element.isDisplayed(tableHead, "Шапка таблицы");
     }
 
-    public void verifySuccessRowDeleteMessage() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(ALERT)));
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.cssSelector(ALERT), "Element deleted"));
+    public boolean isTableBodyVisible() {
+        return element.isDisplayed(tableBody, "Тело таблицы");
+    }
+
+    public boolean isNameColumnVisible() {
+        return element.isDisplayed(nameColumn, "Колонка Name");
+    }
+
+    public boolean isIdColumnVisible() {
+        return element.isDisplayed(idColumn, "Колонка Id");
+    }
+
+    public boolean isCreatedAtColumnVisible() {
+        return element.isDisplayed(createdAtColumn, "Колонка Created at");
     }
 
     public int getLabelsCount() {
-        wait.until(ExpectedConditions.visibilityOf(labelsTable));
+        isLabelTableVisible();
         return tableRows.size();
     }
 
-    public boolean isLabelExist(String name) {
-        try {
-            return wait.until(driver -> {
-                // ищем ячейки внутри строки row
-                List<WebElement> rows = driver.findElements(By.cssSelector(TABLE_ROWS_CSS));
-
-                // проверяем, что текст совпадает
-                return rows.stream().anyMatch(row -> {
-                    List<WebElement> nameCells = row.findElements(By.cssSelector("td.column-name"));
-                    return !nameCells.isEmpty() && nameCells.getFirst().getText().trim().equals(name);
-                });
-            });
-        } catch (TimeoutException e) {
-            return false;
-        }
+    public String getNameCellText(int numberRow) {
+        WebElement nameElement = nameCells.get(numberRow);
+        return element.getText(nameElement, "Ячейка Name");
     }
 
-    public LabelFormPage openCreateLabelForm() {
-        wait.until(ExpectedConditions.elementToBeClickable(createLabelButton)).click();
-        wait.until(ExpectedConditions.invisibilityOf(labelsTable));
-        return new LabelFormPage(driver);
+    public CreateLabelPage clickCreateLabel() {
+        element.click(createLabelButton, "Создать лейбл");
+        return new CreateLabelPage(driver);
     }
 
-    public LabelFormPage openLastLabel() {
-        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(
-                By.cssSelector(TABLE_ROWS_CSS), 0));
-        WebElement lastRow = tableRows.getLast();
-        wait.until(ExpectedConditions.elementToBeClickable(lastRow))
-                .click();
-        return new LabelFormPage(driver);
+    public CreateLabelPage clickLabel(int numberRow) {
+        element.click(tableRows, numberRow - 1, "Лейбл");
+        return new CreateLabelPage(driver);
     }
 
-    public void deleteLastLabel() {
-        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(
-                By.cssSelector(TABLE_ROWS_CSS), 0));
-        WebElement lastRow = tableRows.getLast();
-        lastRow.findElement(By.cssSelector(ROW_CHECKBOX_CSS))
-                .click();
+    public void clickRowCheckBox(int numberUserRow) {
+        element.click(rowCheckbox, numberUserRow - 1, "Чек-бокс строки");
+    }
 
-        wait.until(ExpectedConditions.elementToBeClickable(deleteButton))
-                .click();
+    public void clickDelete() {
+        element.click(deleteButton, "Удалить");
     }
 }

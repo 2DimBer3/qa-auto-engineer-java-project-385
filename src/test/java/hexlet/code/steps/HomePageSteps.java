@@ -2,6 +2,7 @@ package hexlet.code.steps;
 
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.LoginPage;
+import hexlet.code.page_object.menu.labels.LabelsPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
 import hexlet.code.page_object.menu.users.UsersPage;
 import io.qameta.allure.Step;
@@ -20,6 +21,11 @@ public class HomePageSteps {
     @Step("Открыть раздел 'Task Statuses'")
     public TaskStatusesPage openMenuTaskStatuses() {
         return homePage.openMenuTaskStatuses();
+    }
+
+    @Step("Открыть раздел 'Labels'")
+    public LabelsPage openMenuLabels() {
+        return homePage.openMenuLabels();
     }
 
     @Step("Выйти из системы")

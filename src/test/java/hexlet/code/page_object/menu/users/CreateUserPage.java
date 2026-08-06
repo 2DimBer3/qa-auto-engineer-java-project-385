@@ -39,7 +39,7 @@ public class CreateUserPage extends HomePage {
     }
 
     public boolean isSaveButtonVisible() {
-        return element.isDisplayed(saveButton, "Last name");
+        return element.isDisplayed(saveButton, "Save");
     }
 
     public void typeEmail(String email) {

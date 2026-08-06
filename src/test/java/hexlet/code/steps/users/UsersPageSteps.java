@@ -1,7 +1,8 @@
-package hexlet.code.steps;
+package hexlet.code.steps.users;
 
 import hexlet.code.page_object.menu.users.CreateUserPage;
 import hexlet.code.page_object.menu.users.UsersPage;
+import hexlet.code.steps.HomePageSteps;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;

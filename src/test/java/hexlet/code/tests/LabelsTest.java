@@ -1,50 +1,54 @@
 package hexlet.code.tests;
 
 import hexlet.code.page_object.HomePage;
-import hexlet.code.page_object.menu.labels.LabelFormPage;
+import hexlet.code.page_object.menu.labels.CreateLabelPage;
 import hexlet.code.page_object.menu.labels.LabelsPage;
+import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
+import hexlet.code.steps.labels.CreateLabelPageSteps;
+import hexlet.code.steps.labels.LabelsPageSteps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LabelsTest extends BaseTest {
 
     private final LoginPageSteps loginPageSteps = new LoginPageSteps();
-    private LabelsPage labelsPage;
+    private final HomePageSteps homePageSteps = new HomePageSteps();
+    private final LabelsPageSteps labelsSteps = new LabelsPageSteps();
+    private final CreateLabelPageSteps createLabelSteps = new CreateLabelPageSteps();
 
     @BeforeEach
     public void loginAndGoToLabels() {
         HomePage homePage = loginPageSteps.openPageAndLogin(config.userLogin(), config.userPassword());
-        labelsPage = homePage.openMenuLabels();
+        homePageSteps.assertPageOpen(homePage);
+        LabelsPage labelPage = homePageSteps.openMenuLabels();
+        labelsSteps.assertLabelsPageOpen(labelPage);
     }
 
     @Test
     public void testLabelsTableContains() {
         // Проверьте, что таблица меток корректно отображает все записи.
-        labelsPage.verifyTableVisible();
-        labelsPage.verifyRequiredColumnsVisible();
+        labelsSteps.assertLabelsTableFullLoad();
+        labelsSteps.assertRequiredColumnsVisible();
     }
 
     @Test
     public void testCreateLabel() {
-        int countBefore = labelsPage.getLabelsCount();
-        LabelFormPage form = labelsPage.openCreateLabelForm();
+        int countBefore = labelsSteps.countNumberLabels();
+
+        CreateLabelPage createLabelPage = labelsSteps.openCreateLabelPage();
+        createLabelSteps.assertCreateLabelPageOpen(createLabelPage);
 
         // Проверьте, что форма добавления открывается и отображает нужные поля.
-        form.verifyFormElementsVisible();
+        createLabelSteps.assertCreateLabelFormElementsVisible();
 
         // Создайте новую метку и проверьте, что она появляется в списке.
         String name = "create";
-        labelsPage = form.createLabelAndGoToList(name);
+        LabelsPage labelsPage = createLabelSteps.fillFormAndSave(name);
 
-        assertTrue(labelsPage.isLabelExist(name),
-                "Новая метка в списке не появилась");
-        assertEquals(countBefore + 1, labelsPage.getLabelsCount(),
-                "Количество меток не увеличилось на 1");
+        labelsSteps.assertLabelsPageOpen(labelsPage);
+        labelsSteps.assertNumberLabels(countBefore + 1);
+        labelsSteps.assertLabelExist(name);
     }
 
     @Test
@@ -54,14 +58,15 @@ public class LabelsTest extends BaseTest {
         createLabel(initialName);
 
         // Измените существующую метку и подтвердите, что обновления сохранены.
-        LabelFormPage form = labelsPage.openLastLabel();
-        String newName = "update";
-        labelsPage = form.editLabelAndGoToList(newName);
+        CreateLabelPage createLabelPage = labelsSteps.openEditLastLabelForm();
+        createLabelSteps.assertCreateLabelPageOpen(createLabelPage);
 
-        assertTrue(labelsPage.isLabelExist(newName),
-                "После редактирования у метки не отображается новое значение: " + newName);
-        assertFalse(labelsPage.isLabelExist(initialName),
-                "После редактирования у метки отображается начальное значение: " + initialName);
+        String newName = "update";
+        LabelsPage labelsPage = createLabelSteps.fillFormAndSave(newName);
+
+        labelsSteps.assertLabelsPageOpen(labelsPage);
+        labelsSteps.assertLabelExist(newName);
+        labelsSteps.assertLabelNotExist(initialName);
     }
 
     @Test
@@ -71,18 +76,19 @@ public class LabelsTest extends BaseTest {
         createLabel(name);
 
         // Удалите одну или несколько меток и убедитесь, что они исчезли из списка.
-        int countBefore = labelsPage.getLabelsCount();
-        labelsPage.deleteLastLabel();
-        labelsPage.verifySuccessRowDeleteMessage();
+        int countBefore = labelsSteps.countNumberLabels();
+        labelsSteps.deleteLabel(countBefore);
+        homePageSteps.assertAlertVisibleWithText("Element deleted");
 
-        assertFalse(labelsPage.isLabelExist(name),
-                "Метка не удалена");
-        assertEquals(countBefore - 1, labelsPage.getLabelsCount(),
-                "Количество статусов не уменьшилось на 1");
+        labelsSteps.assertNumberLabels(countBefore - 1);
+        labelsSteps.assertLabelNotExist(name);
     }
 
     private void createLabel(String name) {
-        LabelFormPage form = labelsPage.openCreateLabelForm();
-        labelsPage = form.createLabelAndGoToList(name);
+        CreateLabelPage createLabelPage = labelsSteps.openCreateLabelPage();
+        createLabelSteps.assertCreateLabelPageOpen(createLabelPage);
+
+        LabelsPage labelsPage = createLabelSteps.fillFormAndSave(name);
+        labelsSteps.assertLabelsPageOpen(labelsPage);
     }
 }

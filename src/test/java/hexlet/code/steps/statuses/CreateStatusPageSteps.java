@@ -1,8 +1,9 @@
-package hexlet.code.steps;
+package hexlet.code.steps.statuses;
 
 import hexlet.code.config.ConfigManager;
 import hexlet.code.page_object.menu.statuses.CreateStatusPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
+import hexlet.code.steps.HomePageSteps;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 
