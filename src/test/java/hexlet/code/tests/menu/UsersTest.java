@@ -1,4 +1,4 @@
-package hexlet.code.tests;
+package hexlet.code.tests.menu;
 
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.menu.users.CreateUserPage;
@@ -7,6 +7,7 @@ import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
 import hexlet.code.steps.users.CreateUserPageSteps;
 import hexlet.code.steps.users.UsersPageSteps;
+import hexlet.code.tests.BaseTest;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package hexlet.code.tests;
+package hexlet.code.tests.menu;
 
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.menu.statuses.CreateStatusPage;
@@ -7,6 +7,7 @@ import hexlet.code.steps.statuses.CreateStatusPageSteps;
 import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
 import hexlet.code.steps.statuses.TaskStatusesPageSteps;
+import hexlet.code.tests.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
