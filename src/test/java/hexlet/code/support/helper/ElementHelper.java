@@ -2,7 +2,6 @@ package hexlet.code.support.helper;
 
 import hexlet.code.support.utils.element.ActionUtils;
 import hexlet.code.support.utils.element.CheckUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,7 +16,7 @@ public class ElementHelper {
 
     public ElementHelper(WebDriver driver, WebDriverWait wait) {
         this.checks = new CheckUtils(driver, wait);
-        this.actions = new ActionUtils(driver, wait, checks);
+        this.actions = new ActionUtils(driver, wait);
     }
 
     // Действия
@@ -37,12 +36,24 @@ public class ElementHelper {
         return actions.getText(element, elementName);
     }
 
+    public List<String> getText(List<WebElement> element, String elementName) {
+        return actions.getText(element, elementName);
+    }
+
     public String getValue(WebElement element, String elementName) {
         return actions.getValue(element, elementName);
     }
 
     public String getPageUrl() {
         return actions.getPageUrl();
+    }
+
+    public void selectOptionFromList(List<WebElement> options, String optionText) {
+        actions.selectOptionFromList(options, optionText);
+    }
+
+    public void waitForElementsStable(List<WebElement> elements, String description) {
+        actions.waitForElementsStable(elements, description);
     }
 
     // Проверки
@@ -54,10 +65,6 @@ public class ElementHelper {
         return checks.isDisplayed(element, elementName, timeout);
     }
 
-    public boolean isHidden(WebElement element, String elementName) {
-        return checks.isHidden(element, elementName);
-    }
-
     public boolean hasText(WebElement element, String expectedText, String elementName) {
         return checks.hasText(element, expectedText, elementName);
     }
@@ -66,7 +73,8 @@ public class ElementHelper {
         return checks.attributeContains(element, attrName, partialValue, elementName);
     }
 
-    public List<WebElement> findElements(By by, String description) {
-        return actions.findElements(by, description);
+    public void dragAndDrop(WebElement source, WebElement target) {
+        actions.dragAndDrop(source, target);
     }
+
 }

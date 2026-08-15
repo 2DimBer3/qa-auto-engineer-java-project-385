@@ -1,130 +1,144 @@
 package hexlet.code.tests;
 
 import hexlet.code.page_object.HomePage;
-import hexlet.code.page_object.menu.tasks.TaskFormPage;
+import hexlet.code.page_object.menu.tasks.EditTaskPage;
+import hexlet.code.page_object.menu.tasks.CreateTaskPage;
 import hexlet.code.page_object.menu.tasks.TasksPage;
+import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
+import hexlet.code.steps.tasks.CreateTaskPageSteps;
+import hexlet.code.steps.tasks.EditTaskPageSteps;
+import hexlet.code.steps.tasks.TasksPageSteps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class TasksTest extends BaseTest {
 
-    private static final String DEFAULT_ASSIGNEE_EMAIL = "michael@example.com";
-    private static final String STATUS_PUBLISHED = "Published";
-
-    private final LoginPageSteps loginPageSteps = new LoginPageSteps();
-
-    private TasksPage tasksPage;
+    private final LoginPageSteps loginSteps = new LoginPageSteps();
+    private final HomePageSteps homeSteps = new HomePageSteps();
+    private final TasksPageSteps tasksSteps = new TasksPageSteps();
+    private final CreateTaskPageSteps createTaskSteps = new CreateTaskPageSteps();
+    private final EditTaskPageSteps editTaskSteps = new EditTaskPageSteps();
 
     @BeforeEach
     public void loginAndGoToTasks() {
-        HomePage homePage = loginPageSteps.openPageAndLogin(config.userLogin(), config.userPassword());
-        tasksPage = homePage.openMenuTasks();
+        HomePage homePage = loginSteps.openPageAndLogin(config.userLogin(), config.userPassword());
+        homeSteps.assertPageOpen(homePage);
+        TasksPage tasksPage = homeSteps.openMenuTasks();
+        tasksSteps.assertTasksPageOpen(tasksPage);
     }
 
     @Test
-    public void testBoardDisplaysAllTasks() {
-        tasksPage.verifyBoardVisible();
-        assertFalse(tasksPage.getAllTaskNames().isEmpty(),
-                "На доске нет ни одной задачи");
+    public void testBoardNotEmpty() {
+        tasksSteps.assertTasksBoardNotEmpty();
     }
 
     @Test
     public void testFilterByStatus() {
         String status = "To Review";
-        tasksPage.filterByStatus(status);
-        tasksPage.verifyAllCardsInColumn(status);
-
-        assertFalse(tasksPage.getAllTaskNames().isEmpty(),
-                "После фильтрации должен быть хотя бы один результат");
+        tasksSteps.filterByStatus(status);
+        tasksSteps.assertAllTasksInColumn(status);
     }
 
     @Test
     public void testFilterByAssignee() {
-        List<String> before = tasksPage.getAllTaskNames();
-        tasksPage.filterByAssignee("peter@outlook.com");
-        tasksPage.verifyCardListChanged(before);
+        String assignee = "peter@outlook.com";
+        tasksSteps.filterByAssignee(assignee);
+        tasksSteps.assertFilterTasksByAssigner(assignee);
     }
 
     @Test
     public void testFilterByLabel() {
-        List<String> before = tasksPage.getAllTaskNames();
-        tasksPage.filterByLabel("bug");
-        tasksPage.verifyCardListChanged(before);
+        String label = "bug";
+        tasksSteps.filterByLabel("bug");
+        tasksSteps.assertFilterTasksByLabel(label);
     }
 
     @Test
     public void testCreateTask() {
-        int countBefore = tasksPage.getAllTaskNames().size();
-        TaskFormPage form = tasksPage.openCreateTaskForm();
+        int countBefore = tasksSteps.countNumberTasks();
 
-        form.verifyFormElementsVisible();
+        CreateTaskPage createTaskPage = tasksSteps.openCreateTaskPage();
+        createTaskSteps.assertCreateTaskPageOpen(createTaskPage);
 
+        // Проверьте, что форма добавления открывается и отображает нужные поля.
+        createTaskSteps.assertCreateTaskFormElementsVisible();
+
+        // Заполните title и status, подтвердите создание и убедитесь, что запись появилась в списке.
+        String assigner = "michael@example.com";
         String title = "Create Task";
-        String status = STATUS_PUBLISHED;
-        tasksPage = form.createTaskAndGoToBoard(DEFAULT_ASSIGNEE_EMAIL, title, status);
+        String status = "Published";
+        TasksPage tasksPage = createTaskSteps.fillRequireFormFieldsAndSave(assigner, title, status);
 
-        assertTrue(tasksPage.isTaskPresent(title),
-                "Новая задача не появилась на доске");
-        assertEquals(countBefore + 1, tasksPage.getAllTaskNames().size(),
-                "Количество карточек не увеличилось на 1");
-        assertEquals(status, tasksPage.getColumnContainingCard(title),
-                "Задача не отображается в колонке " + status);
+        tasksSteps.assertTasksPageOpen(tasksPage);
+        tasksSteps.assertNumberTasks(countBefore + 1);
+        tasksSteps.assertTaskExist(title);
+        tasksSteps.assertTaskInColumn(title, status);
     }
 
     @Test
     public void testEditTask() {
+        String initialAssigner = "emily@example.com";
         String initialTitle = "Edit Me";
-        createTask(initialTitle);
+        String initialStatus = "Draft";
+        createTask(initialAssigner, initialTitle, initialStatus);
 
-        TaskFormPage form = tasksPage.openEditTaskByName(initialTitle);
+        // Откройте форму редактирования, измените данные и убедитесь, что обновления сохранены.
+        EditTaskPage editTaskPage = tasksSteps.openEditTaskFormByTitle(initialTitle);
+        editTaskSteps.assertEditTaskPageOpen(editTaskPage);
+
         String newAssignee = "sarah@example.com";
         String newTitle = "Update Task";
-        tasksPage = form.editTaskAndGoToBoard(newAssignee, newTitle);
+        editTaskSteps.fillAssignee(newAssignee);
+        editTaskSteps.fillTitle(newTitle);
+        TasksPage tasksPage = editTaskSteps.clickSave();
 
-        assertTrue(tasksPage.isTaskPresent(newTitle),
-                "Отредактированная задача не отображается с новым названием " + newTitle);
-        assertFalse(tasksPage.isTaskPresent(initialTitle),
-                "Присутствует задача со старым названием " + initialTitle);
+        tasksSteps.assertTasksPageOpen(tasksPage);
+        tasksSteps.assertTaskExist(newTitle);
+        tasksSteps.assertTaskNotExist(initialTitle);
     }
 
     @Test
     public void testMoveTaskBetweenColumns() {
-        String initialTitle = "Move Me";
-        createTask(initialTitle);
+        // Создать новую задачу
+        String assigner = "alice@example.com";
+        String title = "Move Me";
+        String initialStatus = "To Be Fixed";
+        createTask(assigner, title, initialStatus);
 
-        TaskFormPage form = tasksPage.openEditTaskByName(initialTitle);
-        String newStatus = "To Be Fixed";
-        tasksPage = form.editStatusAndGoToBoard(newStatus);
+        //  Переместить задачу в соседнюю колонку и проверить, что она переместилась
+        String newStatus = "To Publish";
+        tasksSteps.moveTaskToColumn(title, newStatus);
 
-        assertEquals(newStatus, tasksPage.getColumnContainingCard(initialTitle),
-                "Задача не переместилась в колонку " + newStatus);
+        tasksSteps.assertTaskInColumn(title, newStatus);
     }
 
     @Test
     public void testDeleteTask() {
+        // Создаём новую задачу
+        String assigner = "peter@example.com";
         String title = "Delete Me";
-        createTask(title);
+        String status = "To Publish";
+        createTask(assigner, title, status);
+        int countBefore = tasksSteps.countNumberTasks();
 
-        int countBefore = tasksPage.getAllTaskNames().size();
-        TaskFormPage form = tasksPage.openEditTaskByName(title);
-        tasksPage = form.deleteAndGoToBoard();
-        tasksPage.verifySuccessDeleteMessage();
+        // Удалите задачу и проверьте, что она исчезла с доски.
+        EditTaskPage editTaskPage = tasksSteps.openEditTaskFormByTitle(title);
+        editTaskSteps.assertEditTaskPageOpen(editTaskPage);
 
-        assertEquals(countBefore - 1, tasksPage.getAllTaskNames().size(),
-                "Количество карточек не уменьшилось на 1");
-        assertFalse(tasksPage.isTaskPresent(title),
-                "Отображается удалённая задача " + title);
+        TasksPage tasksPage = editTaskSteps.deleteTask();
+        tasksSteps.assertTasksPageOpen(tasksPage);
+
+        tasksSteps.assertAlertVisibleWithText("Element deleted");
+        tasksSteps.assertNumberTasks(countBefore - 1);
+        tasksSteps.assertTaskNotExist(title);
     }
 
-    private void createTask(String title) {
-        TaskFormPage form = tasksPage.openCreateTaskForm();
-        tasksPage = form.createTaskAndGoToBoard(TasksTest.DEFAULT_ASSIGNEE_EMAIL, title, TasksTest.STATUS_PUBLISHED);
+    private void createTask(String assigner, String title, String status) {
+        CreateTaskPage createTaskPage = tasksSteps.openCreateTaskPage();
+        createTaskSteps.assertCreateTaskPageOpen(createTaskPage);
+
+        TasksPage tasksPage = createTaskSteps.fillRequireFormFieldsAndSave(assigner, title, status);
+        tasksSteps.assertTasksPageOpen(tasksPage);
     }
 }

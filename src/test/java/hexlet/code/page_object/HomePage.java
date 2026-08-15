@@ -8,7 +8,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-@SuppressWarnings("unused")
 public class HomePage extends BasePage {
 
     private static final String ATTRIBUTE_CLASS = "class";
@@ -62,13 +61,6 @@ public class HomePage extends BasePage {
 
     public LoginPage clickLogout() {
         element.click(logoutButton, "Кнопка выхода");
-        return new LoginPage(driver);
-    }
-
-    public LoginPage logout() {
-        element.click(profileButton, "Кнопка профиля");
-        element.click(logoutButton, "Кнопка выхода");
-
         return new LoginPage(driver);
     }
 

@@ -1,9 +1,10 @@
 package hexlet.code.support.utils.element;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
@@ -14,12 +15,10 @@ public class ActionUtils {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final CheckUtils checkUtils;
 
-    public ActionUtils(WebDriver driver, WebDriverWait wait, CheckUtils checkUtils) {
+    public ActionUtils(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
-        this.checkUtils = checkUtils;
     }
 
     /**
@@ -47,7 +46,7 @@ public class ActionUtils {
     }
 
     public void click(List<WebElement> elements, int index, String elementName) {
-        if (!checkUtils.waitForCollectionNotEmpty(elements, elementName)) {
+        if (!waitForCollectionNotEmpty(elements, elementName)) {
             throw new IllegalStateException("Коллекция '" + elementName + "' пуста, невозможно выполнить клик");
         }
 
@@ -77,37 +76,75 @@ public class ActionUtils {
         return element.getText().trim();
     }
 
+    public List<String> getText(List<WebElement> collection, String elementName) {
+        return collection.stream()
+                .map(element -> getText(element, elementName))
+                .toList();
+    }
+
     public String getValue(WebElement element, String elementName) {
         wait.withMessage(String.format("Элемент '%s' не отобразился для получения значения из value", elementName))
                 .until(d -> element.isDisplayed());
         return Objects.requireNonNull(element.getAttribute("value")).trim();
     }
 
-    public List<WebElement> findElements(By by, String description) {
-        AtomicInteger prevSize = new AtomicInteger(-1);
-
+    public WebElement findElementByText(List<WebElement> elements, String expectedText, String description) {
         return wait.withMessage(
-                        String.format("Не удалось дождаться стабильного количества элементов по локатору '%s' (%s)",
-                                by, description))
+                        String.format("В коллекции '%s' не найден элемент с текстом '%s' за %s секунд",
+                                description, expectedText,
+                                driver.manage().timeouts().getImplicitWaitTimeout()))
                 .until(d -> {
-                    List<WebElement> current = d.findElements(by);
-                    int size = current.size();
-
-                    if (size == 0) {
-                        prevSize.set(-1);
-                        return null;
+                    for (WebElement element : elements) {
+                        if (element.getText().trim().equals(expectedText)) {
+                            return element;
+                        }
                     }
-
-                    if (size == prevSize.get()) {
-                        return current;
-                    }
-
-                    prevSize.set(size);
                     return null;
+                });
+    }
+
+    public boolean waitForCollectionNotEmpty(List<WebElement> elements, String description) {
+        try {
+            wait.withMessage(String.format("Коллекция '%s' не стала непустой за %s секунд",
+                            description, driver.manage().timeouts().getImplicitWaitTimeout()))
+                    .until(d -> !elements.isEmpty());
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    public void waitForElementsStable(List<WebElement> elements, String description) {
+        AtomicInteger prevSize = new AtomicInteger(-1);
+        wait.withMessage(String.format("Список элементов '%s' не стабилизировался за %s секунд",
+                        description, driver.manage().timeouts().getImplicitWaitTimeout()))
+                .until(d -> {
+                    int size = elements.size();
+                    if (size == prevSize.get()) {
+                        return true;
+                    }
+                    prevSize.set(size);
+                    return false;
                 });
     }
 
     public String getPageUrl() {
         return driver.getCurrentUrl();
+    }
+
+    public void selectOptionFromList(List<WebElement> options, String optionText) {
+        WebElement option = findElementByText(options, optionText, "Опции списка");
+        click(option, "Опция '" + optionText + "'");
+    }
+
+    public void dragAndDrop(WebElement source, WebElement target) {
+        wait.withMessage("Исходный или целевой элемент не видимы для перетаскивания")
+                .until(d -> source.isDisplayed() && target.isDisplayed());
+
+        new Actions(driver)
+                .clickAndHold(source)
+                .moveToElement(target)
+                .release()
+                .perform();
     }
 }

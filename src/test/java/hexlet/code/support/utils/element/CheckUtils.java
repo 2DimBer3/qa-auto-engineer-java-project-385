@@ -1,12 +1,10 @@
 package hexlet.code.support.utils.element;
 
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.List;
 
 public class CheckUtils {
 
@@ -34,34 +32,11 @@ public class CheckUtils {
         }
     }
 
-    public boolean isHidden(WebElement element, String elementName) {
-        try {
-            wait.withMessage(String.format("Элемент '%s' не стал скрытым за %s секунд",
-                            elementName, driver.manage().timeouts().getImplicitWaitTimeout()))
-                    .until(d -> !element.isDisplayed());
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-
     public boolean hasText(WebElement element, String expectedText, String elementName) {
         try {
             wait.withMessage(String.format("Элемент '%s' не содержит текст '%s'", elementName, expectedText))
                     .until(d -> element.isDisplayed()
                             && element.getText().trim().equals(expectedText));
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean hasTextIgnoringCase(WebElement element, String expectedText, String elementName) {
-        try {
-            wait.withMessage(String.format("Элемент '%s' не содержит текст '%s'", elementName, expectedText))
-                    .until(d -> element.isDisplayed()
-                            && element.getText().trim().equalsIgnoreCase(expectedText));
             return true;
         } catch (Exception e) {
             return false;
@@ -78,17 +53,6 @@ public class CheckUtils {
                     });
             return true;
         } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean waitForCollectionNotEmpty(List<WebElement> elements, String description) {
-        try {
-            wait.withMessage(String.format("Коллекция '%s' не стала непустой за %s секунд",
-                            description, driver.manage().timeouts().getImplicitWaitTimeout()))
-                    .until(d -> !elements.isEmpty());
-            return true;
-        } catch (TimeoutException e) {
             return false;
         }
     }

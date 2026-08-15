@@ -80,12 +80,12 @@ public class TaskStatusesTest extends BaseTest {
         String name = "To Delete";
         String slug = "to_delete";
         createStatus(name, slug);
+        int countBefore = statusSteps.countNumberStatuses();
 
         // Удалите один или несколько статусов и проверьте, что они исчезли из списка.
-        int countBefore = statusSteps.countNumberStatuses();
         statusSteps.deleteStatus(countBefore);
-        homePageSteps.assertAlertVisibleWithText("Element deleted");
 
+        statusSteps.assertAlertVisibleWithText("Element deleted");
         statusSteps.assertNumberStatuses(countBefore - 1);
         statusSteps.assertStatusNotExist(name, slug);
     }

@@ -32,4 +32,10 @@ public interface TestConfig extends Config {
 
     @DefaultValue("/labels/create")
     String labelCreateEndpoint();
+
+    @DefaultValue("/tasks/create")
+    String taskCreateEndpoint();
+
+    @DefaultValue("/tasks/{int}")
+    String taskEditEndpoint();
 }

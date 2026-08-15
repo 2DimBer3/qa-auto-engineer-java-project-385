@@ -4,6 +4,7 @@ import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.LoginPage;
 import hexlet.code.page_object.menu.labels.LabelsPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
+import hexlet.code.page_object.menu.tasks.TasksPage;
 import hexlet.code.page_object.menu.users.UsersPage;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
@@ -26,6 +27,11 @@ public class HomePageSteps {
     @Step("Открыть раздел 'Labels'")
     public LabelsPage openMenuLabels() {
         return homePage.openMenuLabels();
+    }
+
+    @Step("Открыть раздел 'Tasks'")
+    public TasksPage openMenuTasks() {
+        return homePage.openMenuTasks();
     }
 
     @Step("Выйти из системы")
