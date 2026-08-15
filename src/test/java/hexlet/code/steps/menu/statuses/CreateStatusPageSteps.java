@@ -1,4 +1,4 @@
-package hexlet.code.steps.statuses;
+package hexlet.code.steps.menu.statuses;
 
 import hexlet.code.config.ConfigManager;
 import hexlet.code.page_object.menu.statuses.CreateStatusPage;

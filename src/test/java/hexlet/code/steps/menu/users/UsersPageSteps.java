@@ -1,4 +1,4 @@
-package hexlet.code.steps.users;
+package hexlet.code.steps.menu.users;
 
 import hexlet.code.page_object.menu.users.CreateUserPage;
 import hexlet.code.page_object.menu.users.UsersPage;

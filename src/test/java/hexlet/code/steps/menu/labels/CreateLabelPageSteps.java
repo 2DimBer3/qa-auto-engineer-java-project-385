@@ -1,4 +1,4 @@
-package hexlet.code.steps.labels;
+package hexlet.code.steps.menu.labels;
 
 import hexlet.code.config.ConfigManager;
 import hexlet.code.page_object.menu.labels.CreateLabelPage;

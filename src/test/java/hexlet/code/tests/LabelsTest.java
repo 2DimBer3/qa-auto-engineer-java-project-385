@@ -5,8 +5,8 @@ import hexlet.code.page_object.menu.labels.CreateLabelPage;
 import hexlet.code.page_object.menu.labels.LabelsPage;
 import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
-import hexlet.code.steps.labels.CreateLabelPageSteps;
-import hexlet.code.steps.labels.LabelsPageSteps;
+import hexlet.code.steps.menu.labels.CreateLabelPageSteps;
+import hexlet.code.steps.menu.labels.LabelsPageSteps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

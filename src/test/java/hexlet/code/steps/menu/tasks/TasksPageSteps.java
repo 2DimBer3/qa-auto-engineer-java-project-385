@@ -1,4 +1,4 @@
-package hexlet.code.steps.tasks;
+package hexlet.code.steps.menu.tasks;
 
 import hexlet.code.page_object.menu.tasks.EditTaskPage;
 import hexlet.code.page_object.menu.tasks.ShowTaskPage;
