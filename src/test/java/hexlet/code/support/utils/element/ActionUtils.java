@@ -1,11 +1,12 @@
 package hexlet.code.support.utils.element;
 
+import hexlet.code.support.utils.common.CustomWebDriverWait;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,9 +15,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ActionUtils {
 
     private final WebDriver driver;
-    private final WebDriverWait wait;
+    private final CustomWebDriverWait wait;
 
-    public ActionUtils(WebDriver driver, WebDriverWait wait) {
+    public ActionUtils(WebDriver driver, CustomWebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
     }
@@ -26,18 +27,14 @@ public class ActionUtils {
      * Используется pollingEvery, чтобы чаще проверять готовность элемента.
      */
     public void click(WebElement element, String elementName) {
-        System.out.println("timeout here: " + driver.manage().timeouts().getImplicitWaitTimeout());
+        System.out.println("timeout here: " + wait.getTimeout());
         try {
-            // Скроллим к элементу, чтобы избежать проблем с видимостью
+            wait.withMessage(String.format("Элемент '%s' не стал кликабельным за %s секунд",
+                            elementName, wait.getTimeout()))
+                    .until(ExpectedConditions.elementToBeClickable(element));
             ((JavascriptExecutor) driver).executeScript(
                     "arguments[0].scrollIntoView({block: 'center'});", element
             );
-
-            // Ожидаем кликабельности с кастомным интервалом опроса и сообщением
-            wait.withMessage(String.format("Элемент '%s' не стал кликабельным за %s секунд",
-                            elementName, driver.manage().timeouts().getImplicitWaitTimeout()))
-                    .until(d -> element.isEnabled() && element.isDisplayed());
-
             element.click();
         } catch (Exception e) {
             // Fallback: клик через JS, если обычный клик перехвачен
@@ -91,8 +88,7 @@ public class ActionUtils {
     public WebElement findElementByText(List<WebElement> elements, String expectedText, String description) {
         return wait.withMessage(
                         String.format("В коллекции '%s' не найден элемент с текстом '%s' за %s секунд",
-                                description, expectedText,
-                                driver.manage().timeouts().getImplicitWaitTimeout()))
+                                description, expectedText, wait.getTimeout()))
                 .until(d -> {
                     for (WebElement element : elements) {
                         if (element.getText().trim().equals(expectedText)) {
@@ -106,7 +102,7 @@ public class ActionUtils {
     public boolean waitForCollectionNotEmpty(List<WebElement> elements, String description) {
         try {
             wait.withMessage(String.format("Коллекция '%s' не стала непустой за %s секунд",
-                            description, driver.manage().timeouts().getImplicitWaitTimeout()))
+                            description, wait.getTimeout()))
                     .until(d -> !elements.isEmpty());
             return true;
         } catch (TimeoutException e) {
@@ -117,7 +113,7 @@ public class ActionUtils {
     public void waitForElementsStable(List<WebElement> elements, String description) {
         AtomicInteger prevSize = new AtomicInteger(-1);
         wait.withMessage(String.format("Список элементов '%s' не стабилизировался за %s секунд",
-                        description, driver.manage().timeouts().getImplicitWaitTimeout()))
+                        description, wait.getTimeout()))
                 .until(d -> {
                     int size = elements.size();
                     if (size == prevSize.get()) {

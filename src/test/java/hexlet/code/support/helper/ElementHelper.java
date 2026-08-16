@@ -1,10 +1,10 @@
 package hexlet.code.support.helper;
 
+import hexlet.code.support.utils.common.CustomWebDriverWait;
 import hexlet.code.support.utils.element.ActionUtils;
 import hexlet.code.support.utils.element.CheckUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
@@ -14,7 +14,7 @@ public class ElementHelper {
     private final ActionUtils actions;
     private final CheckUtils checks;
 
-    public ElementHelper(WebDriver driver, WebDriverWait wait) {
+    public ElementHelper(WebDriver driver, CustomWebDriverWait wait) {
         this.checks = new CheckUtils(driver, wait);
         this.actions = new ActionUtils(driver, wait);
     }

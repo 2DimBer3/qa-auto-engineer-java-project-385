@@ -1,5 +1,6 @@
 package hexlet.code.support.utils.element;
 
+import hexlet.code.support.utils.common.CustomWebDriverWait;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -9,15 +10,15 @@ import java.time.Duration;
 public class CheckUtils {
 
     private final WebDriver driver;
-    private final WebDriverWait wait;
+    private final CustomWebDriverWait wait;
 
-    public CheckUtils(WebDriver driver, WebDriverWait wait) {
+    public CheckUtils(WebDriver driver, CustomWebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
     }
 
     public boolean isDisplayed(WebElement element, String elementName) {
-        return isDisplayed(element, elementName, driver.manage().timeouts().getImplicitWaitTimeout());
+        return isDisplayed(element, elementName, wait.getTimeout());
     }
 
     public boolean isDisplayed(WebElement element, String elementName, Duration timeout) {

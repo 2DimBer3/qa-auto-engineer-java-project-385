@@ -27,8 +27,8 @@ public abstract class BaseTest {
     public void setupTest() {
         LOG.info("Запуск теста: {}", this.getClass().getSimpleName());
         driver = DriverFactory.createDriver(config);
-        driver.manage().window().maximize();
         LOG.debug("Драйвер создан: {}", driver.getClass().getSimpleName());
+        driver.manage().window().maximize();
     }
 
     @AfterEach
@@ -36,7 +36,7 @@ public abstract class BaseTest {
         if (driver != null) {
             driver.quit();
             DriverFactory.removeDriver();
-            LOG.debug("Драйвер закрыт");
+            LOG.debug("Драйвер закрыт: {}", driver.getClass().getSimpleName());
         }
     }
 }
