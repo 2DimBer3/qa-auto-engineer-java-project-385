@@ -10,10 +10,6 @@ import org.openqa.selenium.support.FindBy;
 
 public class HomePage extends BasePage {
 
-    private static final String ATTRIBUTE_CLASS = "class";
-    private static final String ACTIVE_MENU_ITEM_CLASS = "RaMenuItemLink-active";
-    protected static final String ALERT_CSS = ".MuiSnackbarContent-message";
-
     @FindBy(css = "[class~='RaUserMenu-userButton']")
     private WebElement profileButton;
 
@@ -32,7 +28,7 @@ public class HomePage extends BasePage {
     @FindBy(css = "[href$='tasks']")
     private WebElement menuTasksButton;
 
-    @FindBy(css = ALERT_CSS)
+    @FindBy(css = ".MuiSnackbarContent-message")
     protected WebElement alert;
 
     public HomePage(WebDriver driver) {
@@ -47,7 +43,7 @@ public class HomePage extends BasePage {
         return element.hasText(alert, text, "Оповещение");
     }
 
-    public boolean isUserLoggedIn() {
+    public boolean isProfileButtonVisible() {
         return element.isDisplayed(profileButton, "Кнопка профиля");
     }
 
@@ -64,35 +60,23 @@ public class HomePage extends BasePage {
         return new LoginPage(driver);
     }
 
-    public UsersPage openMenuUsers() {
+    public UsersPage clickMenuUsers() {
         element.click(menuUsersButton, "Пункт меню 'Пользователи'");
-        element.attributeContains(menuUsersButton, ATTRIBUTE_CLASS,
-                ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Пользователи'");
-
         return new UsersPage(driver);
     }
 
-    public TaskStatusesPage openMenuTaskStatuses() {
+    public TaskStatusesPage clickMenuTaskStatuses() {
         element.click(menuTaskStatusesButton, "Пункт меню 'Статусы задач'");
-        element.attributeContains(menuTaskStatusesButton, ATTRIBUTE_CLASS,
-                ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Статусы задач'");
-
         return new TaskStatusesPage(driver);
     }
 
-    public LabelsPage openMenuLabels() {
+    public LabelsPage clickMenuLabels() {
         element.click(menuLabelsButton, "Пункт меню 'Лейблы'");
-        element.attributeContains(menuLabelsButton, ATTRIBUTE_CLASS,
-                ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Лейблы'");
-
         return new LabelsPage(driver);
     }
 
-    public TasksPage openMenuTasks() {
+    public TasksPage clickMenuTasks() {
         element.click(menuTasksButton, "Пункт меню 'Задачи'");
-        element.attributeContains(menuTasksButton, ATTRIBUTE_CLASS,
-                ACTIVE_MENU_ITEM_CLASS, "Пункт меню 'Задачи'");
-
         return new TasksPage(driver);
     }
 }

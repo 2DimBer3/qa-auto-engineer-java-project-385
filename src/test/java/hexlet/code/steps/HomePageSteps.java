@@ -16,22 +16,22 @@ public class HomePageSteps {
 
     @Step("Открыть раздел 'Users'")
     public UsersPage openMenuUsers() {
-        return homePage.openMenuUsers();
+        return homePage.clickMenuUsers();
     }
 
     @Step("Открыть раздел 'Task Statuses'")
     public TaskStatusesPage openMenuTaskStatuses() {
-        return homePage.openMenuTaskStatuses();
+        return homePage.clickMenuTaskStatuses();
     }
 
     @Step("Открыть раздел 'Labels'")
     public LabelsPage openMenuLabels() {
-        return homePage.openMenuLabels();
+        return homePage.clickMenuLabels();
     }
 
     @Step("Открыть раздел 'Tasks'")
     public TasksPage openMenuTasks() {
-        return homePage.openMenuTasks();
+        return homePage.clickMenuTasks();
     }
 
     @Step("Выйти из системы")
@@ -43,7 +43,7 @@ public class HomePageSteps {
     @Step("Проверить, что открыта главная страница")
     public void assertPageOpen(HomePage homePage) {
         this.homePage = homePage;
-        boolean isOpen = homePage.isUserLoggedIn();
+        boolean isOpen = homePage.isProfileButtonVisible();
 
         Assertions.assertTrue(isOpen,
                 "Главная страницы не открыта");
