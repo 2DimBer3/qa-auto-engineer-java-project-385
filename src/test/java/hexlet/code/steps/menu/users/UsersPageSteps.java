@@ -77,7 +77,7 @@ public class UsersPageSteps extends HomePageSteps {
     public void assertUserNotExist(String email, String firstName, String lastName) {
         int userCount = usersPage.getUsersCount();
         boolean isNotExist = true;
-        for (int i = 1; i <= userCount; i++) {
+        for (int i = 0; i < userCount; i++) {
             String actualEmail = usersPage.getEmailCellText(i);
             String actualFirstName = usersPage.getFirstNameCellText(i);
             String actualLastName = usersPage.getLastNameCellText(i);
@@ -94,7 +94,7 @@ public class UsersPageSteps extends HomePageSteps {
     public void assertUserExist(String email, String firstName, String lastName) {
         int userCount = usersPage.getUsersCount();
         boolean isExist = false;
-        for (int i = 1; i <= userCount; i++) {
+        for (int i = 0; i < userCount; i++) {
             String actualEmail = usersPage.getEmailCellText(i);
             String actualFirstName = usersPage.getFirstNameCellText(i);
             String actualLastName = usersPage.getLastNameCellText(i);

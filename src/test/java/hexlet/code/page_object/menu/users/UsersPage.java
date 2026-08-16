@@ -83,7 +83,7 @@ public class UsersPage extends HomePage {
     }
 
     public boolean hasEmptyResultBlockText(String text) {
-        return element.hasText(emptyResultsBlock, text, "Пустой результирующий блок");
+        return element.containsText(emptyResultsBlock, text, "Пустой результирующий блок");
     }
 
     public int getUsersCount() {

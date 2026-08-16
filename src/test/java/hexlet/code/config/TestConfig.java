@@ -27,6 +27,9 @@ public interface TestConfig extends Config {
     @DefaultValue("/users/create")
     String userCreateEndpoint();
 
+    @DefaultValue("/users/{int}")
+    String userEditEndpoint();
+
     @DefaultValue("/task_statuses/create")
     String statusCreateEndpoint();
 

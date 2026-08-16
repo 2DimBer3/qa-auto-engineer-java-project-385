@@ -44,6 +44,17 @@ public class CheckUtils {
         }
     }
 
+    public boolean containsText(WebElement element, String expectedText, String elementName) {
+        try {
+            wait.withMessage(String.format("Элемент '%s' не содержит текст '%s'", elementName, expectedText))
+                    .until(d -> element.isDisplayed()
+                            && element.getText().trim().contains(expectedText));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean attributeContains(WebElement element, String attrName, String partialValue, String elementName) {
         try {
             wait.withMessage(String.format("Атрибут '%s' элемента '%s' не содержит '%s'",

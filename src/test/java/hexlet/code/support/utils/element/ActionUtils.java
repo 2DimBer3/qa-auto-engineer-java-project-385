@@ -62,9 +62,7 @@ public class ActionUtils {
     public void type(WebElement element, String text, String elementName) {
         wait.withMessage(String.format("Поле '%s' не стало видимым для ввода", elementName))
                 .until(d -> element.isDisplayed() && element.isEnabled());
-        //InputHelper.inputValue(driver, element, text);
-        element.clear();
-        element.sendKeys(text);
+        typeValue(driver, element, text);
     }
 
     public String getText(WebElement element, String elementName) {
@@ -142,5 +140,34 @@ public class ActionUtils {
                 .moveToElement(target)
                 .release()
                 .perform();
+    }
+
+    private void typeValue(WebDriver driver, WebElement element, String inputText) {
+        element.click();
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        // Нативный сеттер value, чтобы React зафиксировал изменение
+        js.executeScript(
+                "var nativeInputValueSetter = "
+                        + "Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;"
+                        + "nativeInputValueSetter.call(arguments[0], arguments[1]);"
+                        + "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));",
+                element, inputText
+        );
+
+        // Небольшая пауза для обновления состояния (можно заменить на явное ожидание)
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        // Убираем фокус, чтобы форма валидировалась
+        js.executeScript(
+                "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));"
+                        + "arguments[0].dispatchEvent(new Event('blur', { bubbles: true }));",
+                element
+        );
     }
 }

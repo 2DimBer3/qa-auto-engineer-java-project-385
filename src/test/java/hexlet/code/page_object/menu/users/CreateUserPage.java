@@ -43,7 +43,7 @@ public class CreateUserPage extends HomePage {
     }
 
     public void typeEmail(String email) {
-        element.type(saveButton, email, "Email");
+        element.type(emailInput, email, "Email");
     }
 
     public void typeFirstName(String firstName) {

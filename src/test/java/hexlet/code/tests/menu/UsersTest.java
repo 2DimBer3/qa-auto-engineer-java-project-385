@@ -70,7 +70,7 @@ public class UsersTest extends BaseTest {
 
         // Откройте форму редактирования и убедитесь, что данные подставляются верно.
         CreateUserPage createUserPage = usersSteps.openEditLastUserForm();
-        createUserSteps.assertCreateUserPageOpen(createUserPage);
+        createUserSteps.assertEditUserPageOpen(createUserPage);
 
         assertValueField(initialEmail, createUserPage.getEmailValue(), "Email");
         assertValueField(initialFirstName, createUserPage.getFirstNameValue(), "First name");
@@ -94,11 +94,11 @@ public class UsersTest extends BaseTest {
 
         // Дополнительно проверьте валидацию, в частности формат email.
         CreateUserPage createUserPage = usersSteps.openEditLastUserForm();
-        createUserSteps.assertCreateUserPageOpen(createUserPage);
+        createUserSteps.assertEditUserPageOpen(createUserPage);
         createUserSteps.fillEmailField("efd");
         createUserSteps.clickSave();
 
-        createUserSteps.assertAlertVisibleWithText("The form is not valid. Please check for errors");
+        homePageSteps.assertAlertVisibleWithText("The form is not valid. Please check for errors");
         createUserSteps.assertFieldWithError("Email", "Incorrect email format");
     }
 

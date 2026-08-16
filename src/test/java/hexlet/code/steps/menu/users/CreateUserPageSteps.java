@@ -7,6 +7,8 @@ import hexlet.code.steps.HomePageSteps;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 
+import java.util.regex.Pattern;
+
 public class CreateUserPageSteps extends HomePageSteps {
 
     private CreateUserPage createUserPage;
@@ -31,24 +33,42 @@ public class CreateUserPageSteps extends HomePageSteps {
         fillEmailField(email);
         fillFirstName(firstName);
         fillLastName(lastName);
-        return clickSave();
+        clickSave();
+        return createUserPage.clickMenuUsers();
     }
 
     @Step("Нажать на кнопку `Save`")
-    public UsersPage clickSave() {
+    public void clickSave() {
         createUserPage.clickSave();
-        return openMenuUsers();
     }
 
     @Step("Проверить, что страница создания пользователя открыта.")
     public void assertCreateUserPageOpen(CreateUserPage createUserPage) {
         this.createUserPage = createUserPage;
-        boolean isOpen = createUserPage.getPageUrl()
-                .contains(ConfigManager.getConfig()
-                        .userCreateEndpoint());
+        String actualUrl = createUserPage.getPageUrl();
+        String expectedEndpoint = ConfigManager.getConfig()
+                .userCreateEndpoint();
+
+        boolean isOpen = actualUrl.contains(expectedEndpoint);
 
         Assertions.assertTrue(isOpen,
-                "Страница создания пользователя не открыта");
+                "Страница создания пользователя не открыта: " + actualUrl);
+    }
+
+    @Step("Проверить, что страница редактирования пользователя открыта.")
+    public void assertEditUserPageOpen(CreateUserPage createUserPage) {
+        this.createUserPage = createUserPage;
+        String actualUrl = createUserPage.getPageUrl();
+
+        String expectedEndpoint = ConfigManager.getConfig()
+                .userEditEndpoint()
+                .replace("{int}", "\\d+");
+
+        boolean isOpen = Pattern.compile(".*" + expectedEndpoint)
+                .matcher(actualUrl)
+                .matches();
+
+        Assertions.assertTrue(isOpen, "Страница редактирования задачи не открыта: " + actualUrl);
     }
 
     @Step("Проверить, что отображаются все элементы формы для создания пользователя.")
