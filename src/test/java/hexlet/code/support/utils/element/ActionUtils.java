@@ -27,7 +27,6 @@ public class ActionUtils {
      * Используется pollingEvery, чтобы чаще проверять готовность элемента.
      */
     public void click(WebElement element, String elementName) {
-        System.out.println("timeout here: " + wait.getTimeout());
         try {
             wait.withMessage(String.format("Элемент '%s' не стал кликабельным за %s секунд",
                             elementName, wait.getTimeout()))

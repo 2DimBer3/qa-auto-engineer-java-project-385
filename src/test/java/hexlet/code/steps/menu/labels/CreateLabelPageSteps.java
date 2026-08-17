@@ -2,10 +2,11 @@ package hexlet.code.steps.menu.labels;
 
 import hexlet.code.config.ConfigManager;
 import hexlet.code.page_object.menu.labels.CreateLabelPage;
-import hexlet.code.page_object.menu.labels.LabelsPage;
 import hexlet.code.steps.HomePageSteps;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+
+import java.util.regex.Pattern;
 
 public class CreateLabelPageSteps extends HomePageSteps {
 
@@ -17,15 +18,14 @@ public class CreateLabelPageSteps extends HomePageSteps {
     }
 
     @Step("Заполнить форму создания лейбла и сохранить")
-    public LabelsPage fillFormAndSave(String name) {
+    public void fillFormAndSave(String name) {
         fillName(name);
-        return clickSave();
+        clickSave();
     }
 
     @Step("Нажать на кнопку `Save`")
-    public LabelsPage clickSave() {
+    public void clickSave() {
         createLabelPage.clickSave();
-        return openMenuLabels();
     }
 
     @Step("Проверить, что страница создания лейбла открыта.")
@@ -36,6 +36,22 @@ public class CreateLabelPageSteps extends HomePageSteps {
                         .labelCreateEndpoint());
 
         Assertions.assertTrue(isOpen, "Страница создания лейбла не открыта");
+    }
+
+    @Step("Проверить, что страница редактирования лейбла открыта.")
+    public void assertEditLabelPageOpen(CreateLabelPage createLabelPage) {
+        this.createLabelPage = createLabelPage;
+        String actualUrl = createLabelPage.getPageUrl();
+
+        String expectedEndpoint = ConfigManager.getConfig()
+                .labelEditEndpoint()
+                .replace("{int}", "\\d+");
+
+        boolean isOpen = Pattern.compile(".*" + expectedEndpoint)
+                .matcher(actualUrl)
+                .matches();
+
+        Assertions.assertTrue(isOpen, "Страница редактирования лейбла не открыта: " + actualUrl);
     }
 
     @Step("Проверить, что отображаются все элементы формы для создания лейбла.")

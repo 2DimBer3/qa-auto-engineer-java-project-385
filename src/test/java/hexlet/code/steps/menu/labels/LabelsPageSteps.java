@@ -70,7 +70,7 @@ public class LabelsPageSteps extends HomePageSteps {
     public void assertLabelNotExist(String name) {
         int labelsCount = labelPage.getLabelsCount();
         boolean isNotExist = true;
-        for (int i = 1; i <= labelsCount; i++) {
+        for (int i = 0; i < labelsCount; i++) {
             String actualName = labelPage.getNameCellText(i);
 
             if (name.equals(actualName)) {

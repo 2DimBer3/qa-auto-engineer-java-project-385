@@ -1,10 +1,9 @@
-package hexlet.code.tests.menu;
+package hexlet.code.tests;
 
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.LoginPage;
 import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
-import hexlet.code.tests.BaseTest;
 import org.junit.jupiter.api.Test;
 
 import static hexlet.code.steps.CommonPageSteps.assertPageTitle;

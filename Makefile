@@ -7,7 +7,7 @@ test:
 	@gradlew clean test
 
 test-class:
-	@gradlew clean test --tests "hexlet.code.tests.HomePageTest"
+	@gradlew clean test --tests "hexlet.code.tests.menu.LabelsTest"
 
 checkstyle:
 	@gradlew checkstyleTest

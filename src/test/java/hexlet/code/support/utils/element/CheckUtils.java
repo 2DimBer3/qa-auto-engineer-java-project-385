@@ -1,6 +1,7 @@
 package hexlet.code.support.utils.element;
 
 import hexlet.code.support.utils.common.CustomWebDriverWait;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,6 +27,7 @@ public class CheckUtils {
             WebDriverWait flexibleWait = new WebDriverWait(driver, timeout);
             flexibleWait.withMessage(String.format("Элемент '%s' не отобразился за %d секунд",
                             elementName, timeout.getSeconds()))
+                    .ignoring(StaleElementReferenceException.class)
                     .until(d -> element.isDisplayed());
             return true;
         } catch (Exception e) {

@@ -1,4 +1,4 @@
-package hexlet.code.tests;
+package hexlet.code.tests.menu;
 
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.menu.labels.CreateLabelPage;
@@ -7,6 +7,7 @@ import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
 import hexlet.code.steps.menu.labels.CreateLabelPageSteps;
 import hexlet.code.steps.menu.labels.LabelsPageSteps;
+import hexlet.code.tests.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +45,8 @@ public class LabelsTest extends BaseTest {
 
         // Создайте новую метку и проверьте, что она появляется в списке.
         String name = "create";
-        LabelsPage labelsPage = createLabelSteps.fillFormAndSave(name);
+        createLabelSteps.fillFormAndSave(name);
+        LabelsPage labelsPage = homePageSteps.openMenuLabels();
 
         labelsSteps.assertLabelsPageOpen(labelsPage);
         labelsSteps.assertNumberLabels(countBefore + 1);
@@ -59,10 +61,11 @@ public class LabelsTest extends BaseTest {
 
         // Измените существующую метку и подтвердите, что обновления сохранены.
         CreateLabelPage createLabelPage = labelsSteps.openEditLastLabelForm();
-        createLabelSteps.assertCreateLabelPageOpen(createLabelPage);
+        createLabelSteps.assertEditLabelPageOpen(createLabelPage);
 
         String newName = "update";
-        LabelsPage labelsPage = createLabelSteps.fillFormAndSave(newName);
+        createLabelSteps.fillFormAndSave(newName);
+        LabelsPage labelsPage = homePageSteps.openMenuLabels();
 
         labelsSteps.assertLabelsPageOpen(labelsPage);
         labelsSteps.assertLabelExist(newName);
@@ -88,7 +91,8 @@ public class LabelsTest extends BaseTest {
         CreateLabelPage createLabelPage = labelsSteps.openCreateLabelPage();
         createLabelSteps.assertCreateLabelPageOpen(createLabelPage);
 
-        LabelsPage labelsPage = createLabelSteps.fillFormAndSave(name);
+        createLabelSteps.fillFormAndSave(name);
+        LabelsPage labelsPage = homePageSteps.openMenuLabels();
         labelsSteps.assertLabelsPageOpen(labelsPage);
     }
 }

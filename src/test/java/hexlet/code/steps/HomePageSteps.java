@@ -49,12 +49,14 @@ public class HomePageSteps {
                 "Главная страницы не открыта");
     }
 
-    @Step("Проверить, что отобразилось оповещение с текстом {alertText}")
+    @Step("Проверить, что отобразилось оповещение с текстом '{alertText}'")
     public void assertAlertVisibleWithText(String alertText) {
         boolean isVisible = homePage.isAlertVisible();
         boolean hasText = homePage.hasAlertText(alertText);
 
-        Assertions.assertTrue(isVisible && hasText,
-                "Оповещение не отобразилось или текст не соответствует");
+        Assertions.assertTrue(isVisible,
+                "Оповещение не отобразилось");
+        Assertions.assertTrue(hasText,
+                "В оповещении текст не соответствует ожидаемому");
     }
 }
