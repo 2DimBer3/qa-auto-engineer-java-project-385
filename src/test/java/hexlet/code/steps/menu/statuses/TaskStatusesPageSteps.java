@@ -75,7 +75,7 @@ public class TaskStatusesPageSteps extends HomePageSteps {
     public void assertStatusNotExist(String name, String slug) {
         int statusesCount = taskStatusesPage.getStatusesCount();
         boolean isNotExist = true;
-        for (int i = 1; i <= statusesCount; i++) {
+        for (int i = 0; i < statusesCount; i++) {
             String actualName = taskStatusesPage.getNameCellText(i);
             String actualSlug = taskStatusesPage.getSlugCellText(i);
 

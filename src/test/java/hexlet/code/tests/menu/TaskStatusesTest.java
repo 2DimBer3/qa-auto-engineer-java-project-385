@@ -3,9 +3,9 @@ package hexlet.code.tests.menu;
 import hexlet.code.page_object.HomePage;
 import hexlet.code.page_object.menu.statuses.CreateStatusPage;
 import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
-import hexlet.code.steps.menu.statuses.CreateStatusPageSteps;
 import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
+import hexlet.code.steps.menu.statuses.CreateStatusPageSteps;
 import hexlet.code.steps.menu.statuses.TaskStatusesPageSteps;
 import hexlet.code.tests.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +48,8 @@ public class TaskStatusesTest extends BaseTest {
         // Заполните название и slug, подтвердите создание и убедитесь, что запись появилась в списке.
         String name = "In Progress";
         String slug = "in_progress";
-        TaskStatusesPage taskStatusesPage = createStatusSteps.fillFormAndSave(name, slug);
+        createStatusSteps.fillFormAndSave(name, slug);
+        TaskStatusesPage taskStatusesPage = homePageSteps.openMenuTaskStatuses();
 
         statusSteps.assertTaskStatusesPageOpen(taskStatusesPage);
         statusSteps.assertNumberStatuses(countBefore + 1);
@@ -64,11 +65,12 @@ public class TaskStatusesTest extends BaseTest {
 
         // Откройте форму редактирования, измените данные и убедитесь, что обновления сохранены.
         CreateStatusPage createStatusPage = statusSteps.openEditLastStatusForm();
-        createStatusSteps.assertCreateStatusPageOpen(createStatusPage);
+        createStatusSteps.assertEditStatusPageOpen(createStatusPage);
 
         String newName = "Updated";
         String newSlug = "updated";
-        TaskStatusesPage taskStatusesPage = createStatusSteps.fillFormAndSave(newName, newSlug);
+        createStatusSteps.fillFormAndSave(newName, newSlug);
+        TaskStatusesPage taskStatusesPage = homePageSteps.openMenuTaskStatuses();
 
         statusSteps.assertTaskStatusesPageOpen(taskStatusesPage);
         statusSteps.assertStatusExist(newName, newSlug);
@@ -86,7 +88,7 @@ public class TaskStatusesTest extends BaseTest {
         // Удалите один или несколько статусов и проверьте, что они исчезли из списка.
         statusSteps.deleteStatus(countBefore);
 
-        statusSteps.assertAlertVisibleWithText("Element deleted");
+        homePageSteps.assertAlertVisibleWithText("Element deleted");
         statusSteps.assertNumberStatuses(countBefore - 1);
         statusSteps.assertStatusNotExist(name, slug);
     }
@@ -108,7 +110,8 @@ public class TaskStatusesTest extends BaseTest {
         CreateStatusPage createStatusPage = statusSteps.openCreateUserPage();
         createStatusSteps.assertCreateStatusPageOpen(createStatusPage);
 
-        TaskStatusesPage taskStatusesPage = createStatusSteps.fillFormAndSave(name, slug);
+        createStatusSteps.fillFormAndSave(name, slug);
+        TaskStatusesPage taskStatusesPage = homePageSteps.openMenuTaskStatuses();
         statusSteps.assertTaskStatusesPageOpen(taskStatusesPage);
     }
 }

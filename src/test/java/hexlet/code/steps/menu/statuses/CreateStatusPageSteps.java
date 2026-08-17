@@ -2,10 +2,11 @@ package hexlet.code.steps.menu.statuses;
 
 import hexlet.code.config.ConfigManager;
 import hexlet.code.page_object.menu.statuses.CreateStatusPage;
-import hexlet.code.page_object.menu.statuses.TaskStatusesPage;
 import hexlet.code.steps.HomePageSteps;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+
+import java.util.regex.Pattern;
 
 public class CreateStatusPageSteps extends HomePageSteps {
 
@@ -22,16 +23,15 @@ public class CreateStatusPageSteps extends HomePageSteps {
     }
 
     @Step("Заполнить форму создания статуса задач и сохранить")
-    public TaskStatusesPage fillFormAndSave(String name, String slug) {
+    public void fillFormAndSave(String name, String slug) {
         fillName(name);
         fillSlug(slug);
-        return clickSave();
+        clickSave();
     }
 
     @Step("Нажать на кнопку `Save`")
-    public TaskStatusesPage clickSave() {
+    public void clickSave() {
         createStatusPage.clickSave();
-        return openMenuTaskStatuses();
     }
 
     @Step("Проверить, что страница создания статуса открыта.")
@@ -42,6 +42,22 @@ public class CreateStatusPageSteps extends HomePageSteps {
                         .statusCreateEndpoint());
 
         Assertions.assertTrue(isOpen, "Страница создания статуса не открыта");
+    }
+
+    @Step("Проверить, что страница редактирования статуса открыта.")
+    public void assertEditStatusPageOpen(CreateStatusPage createStatusPage) {
+        this.createStatusPage = createStatusPage;
+        String actualUrl = createStatusPage.getPageUrl();
+
+        String expectedEndpoint = ConfigManager.getConfig()
+                .statusEditEndpoint()
+                .replace("{int}", "\\d+");
+
+        boolean isOpen = Pattern.compile(".*" + expectedEndpoint)
+                .matcher(actualUrl)
+                .matches();
+
+        Assertions.assertTrue(isOpen, "Страница редактирования статуса не открыта: " + actualUrl);
     }
 
     @Step("Проверить, что отображаются все элементы формы для создания статуса задач.")

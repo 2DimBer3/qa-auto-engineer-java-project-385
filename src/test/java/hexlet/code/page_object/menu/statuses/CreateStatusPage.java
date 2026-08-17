@@ -28,8 +28,9 @@ public class CreateStatusPage extends HomePage {
         element.type(slugInput, slug, "Slug");
     }
 
-    public void clickSave() {
+    public TaskStatusesPage clickSave() {
         element.click(saveButton, "Сохранить");
+        return new TaskStatusesPage(driver);
     }
 
     public boolean isNameInputVisible() {
