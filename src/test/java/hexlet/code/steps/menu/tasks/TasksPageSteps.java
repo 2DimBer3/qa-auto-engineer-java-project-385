@@ -1,8 +1,8 @@
 package hexlet.code.steps.menu.tasks;
 
+import hexlet.code.page_object.menu.tasks.CreateTaskPage;
 import hexlet.code.page_object.menu.tasks.EditTaskPage;
 import hexlet.code.page_object.menu.tasks.ShowTaskPage;
-import hexlet.code.page_object.menu.tasks.CreateTaskPage;
 import hexlet.code.page_object.menu.tasks.TasksPage;
 import hexlet.code.page_object.menu.tasks.components.CardComponent;
 import hexlet.code.page_object.menu.tasks.components.ColumnComponent;
@@ -13,9 +13,12 @@ import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
+import static hexlet.code.steps.CommonPageSteps.goBack;
+
 public class TasksPageSteps extends HomePageSteps {
 
     private TasksPage tasksPage;
+    private ShowTaskPage showTaskPage;
 
     @Step("Открыть форму создания задачи")
     public CreateTaskPage openCreateTaskPage() {
@@ -36,10 +39,14 @@ public class TasksPageSteps extends HomePageSteps {
 
     @Step("Получить все названия задач на доске")
     public List<String> getAllTaskNames() {
-        return tasksPage.getColumnComponents()
+        List<String> cardTitles = tasksPage.getColumnComponents()
                 .stream()
                 .flatMap(column -> column.getAllCardTitles().stream())
                 .toList();
+
+        Allure.addAttachment("Названия задач", String.join(", ", cardTitles));
+
+        return cardTitles;
     }
 
     @Step("Посчитать количество задач на доске")
@@ -81,6 +88,12 @@ public class TasksPageSteps extends HomePageSteps {
     public void filterByLabel(String label) {
         tasksPage.clickLabel();
         tasksPage.selectOption(label);
+    }
+
+    @Step("Открыть карточку задачи '{title}' для просмотра")
+    public ShowTaskPage openTaskForView(String title) {
+        CardComponent card = tasksPage.getCardByTitle(title);
+        return card.clickShow();
     }
 
     @Step("Проверить, что страница Tasks открыта.")
@@ -136,21 +149,24 @@ public class TasksPageSteps extends HomePageSteps {
 
     @Step("Проверить, на доске отфильтровались задачи по label = {expectedLabel}")
     public void assertFilterTasksByLabel(String expectedLabel) {
-        List<CardComponent> cards = tasksPage.getColumnComponents()
-                .stream()
-                .flatMap(column -> column.getCardComponents().stream())
-                .toList();
+        List<String> cardTitles = getAllTaskNames();
 
-        cards.forEach(card -> {
-            ShowTaskPage showTaskPage = card.clickShow(); // шаг открытия просмотра карточки?
-            List<String> actualLabels = showTaskPage.getLabels(); // шаг получения все лейблов карточки?
-            boolean containsExpectedLabel = actualLabels.contains(expectedLabel);
+        for (String title : cardTitles) {
+            this.showTaskPage = openTaskForView(title);
+            assertTaskHasLabel(title, expectedLabel);
+            goBack();
+        }
+    }
 
-            Assertions.assertTrue(containsExpectedLabel,
-                    "На доске не все задачи отфильтровались по указанному label.\n"
-                            + "Лейблы проверяемой карточки:\n"
-                            + actualLabels);
-        });
+    @Step("Проверить, что задача '{title}' содержит лейбл '{expectedLabel}'")
+    public void assertTaskHasLabel(String title, String expectedLabel) {
+        List<String> actualLabels = showTaskPage.getLabels();
+
+        boolean containsExpectedLabel = actualLabels.contains(expectedLabel);
+        Assertions.assertTrue(containsExpectedLabel,
+                "Задача '" + title + "' не содержит лейбл '" + expectedLabel + "'.\n"
+                        + "Лейблы задачи:\n"
+                        + actualLabels);
     }
 
     @Step("Проверить, что в таблице нет задачи с заголовком {title}")

@@ -32,7 +32,7 @@ public class TasksPage extends HomePage {
     @FindBy(css = "li[role='option']")
     private List<WebElement> optionsList;
 
-    @FindBy(css = "[data-rfd-droppable-id]")
+    @FindBy(xpath = "//div[./div[@data-rfd-droppable-id]]")
     private List<WebElement> columnContainers;
 
     private List<ColumnComponent> columnComponents;

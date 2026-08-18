@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ColumnComponent {
 
-    @FindBy(css = "h6")
+    @FindBy(css = "h6[class*='subtitle']")
     private WebElement header;
 
     @FindBy(css = "[data-rfd-draggable-id]")

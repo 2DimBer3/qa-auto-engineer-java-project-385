@@ -20,4 +20,9 @@ public class CommonPageSteps {
         assertEquals(expectedText, actualText,
                 "Элемент '" + fieldName + "' не заполнено ожидаемым значением");
     }
+
+    @Step("Вернуться на доску задач")
+    public static void goBack() {
+        DriverFactory.getDriver().navigate().back();
+    }
 }
