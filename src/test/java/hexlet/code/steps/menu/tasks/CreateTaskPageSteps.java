@@ -2,7 +2,6 @@ package hexlet.code.steps.menu.tasks;
 
 import hexlet.code.config.ConfigManager;
 import hexlet.code.page_object.menu.tasks.CreateTaskPage;
-import hexlet.code.page_object.menu.tasks.TasksPage;
 import hexlet.code.steps.HomePageSteps;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
@@ -29,17 +28,16 @@ public class CreateTaskPageSteps extends HomePageSteps {
     }
 
     @Step("Заполнить обязательные поля формы создания задач и сохранить")
-    public TasksPage fillRequireFormFieldsAndSave(String assignee, String title, String status) {
+    public void fillRequireFormFieldsAndSave(String assignee, String title, String status) {
         fillAssignee(assignee);
         fillTitle(title);
         fillStatus(status);
-        return clickSave();
-    }
+        clickSave();
+   }
 
     @Step("Нажать на кнопку `Save`")
-    public TasksPage clickSave() {
+    public void clickSave() {
         createTaskPage.clickSave();
-        return openMenuTasks();
     }
 
     @Step("Проверить, что страница создания задачи открыта.")

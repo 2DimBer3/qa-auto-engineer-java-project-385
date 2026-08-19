@@ -47,11 +47,13 @@ public class EditTaskPage extends HomePage {
         element.selectOptionFromList(optionsList, optionText);
     }
 
-    public void clickSave() {
+    public TasksPage clickSave() {
         element.click(saveButton, "Save");
+        return new TasksPage(driver);
     }
 
-    public void clickDelete() {
+    public TasksPage clickDelete() {
         element.click(deleteButton, "Delete");
+        return new TasksPage(driver);
     }
 }

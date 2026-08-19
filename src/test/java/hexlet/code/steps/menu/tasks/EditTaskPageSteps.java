@@ -24,14 +24,12 @@ public class EditTaskPageSteps extends HomePageSteps {
 
     @Step("Нажать на кнопку `Save`")
     public TasksPage clickSave() {
-        editTaskPage.clickSave();
-        return openMenuTasks();
+        return editTaskPage.clickSave();
     }
 
     @Step("Удалить задачу")
     public TasksPage deleteTask() {
-        editTaskPage.clickDelete();
-        return openMenuTasks();
+        return editTaskPage.clickDelete();
     }
 
     @Step("Проверить, что страница редактирования задачи открыта.")

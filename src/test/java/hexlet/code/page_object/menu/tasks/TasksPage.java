@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TasksPage extends HomePage {
 
-    @FindBy(css = "[id='main-content']")
+    @FindBy(css = "[class*='list-page']")
     private WebElement board;
 
     @FindBy(css = "a[href='#/tasks/create']")

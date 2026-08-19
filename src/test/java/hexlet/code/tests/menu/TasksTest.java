@@ -1,8 +1,8 @@
 package hexlet.code.tests.menu;
 
 import hexlet.code.page_object.HomePage;
-import hexlet.code.page_object.menu.tasks.EditTaskPage;
 import hexlet.code.page_object.menu.tasks.CreateTaskPage;
+import hexlet.code.page_object.menu.tasks.EditTaskPage;
 import hexlet.code.page_object.menu.tasks.TasksPage;
 import hexlet.code.steps.HomePageSteps;
 import hexlet.code.steps.LoginPageSteps;
@@ -69,7 +69,8 @@ public class TasksTest extends BaseTest {
         String assigner = "michael@example.com";
         String title = "Create Task";
         String status = "Published";
-        TasksPage tasksPage = createTaskSteps.fillRequireFormFieldsAndSave(assigner, title, status);
+        createTaskSteps.fillRequireFormFieldsAndSave(assigner, title, status);
+        TasksPage tasksPage = homeSteps.openMenuTasks();
 
         tasksSteps.assertTasksPageOpen(tasksPage);
         tasksSteps.assertNumberTasks(countBefore + 1);
@@ -102,7 +103,7 @@ public class TasksTest extends BaseTest {
     @Test
     public void testMoveTaskBetweenColumns() {
         // Создать новую задачу
-        String assigner = "alice@example.com";
+        String assigner = "jane@gmail.com";
         String title = "Move Me";
         String initialStatus = "To Be Fixed";
         createTask(assigner, title, initialStatus);
@@ -117,7 +118,7 @@ public class TasksTest extends BaseTest {
     @Test
     public void testDeleteTask() {
         // Создаём новую задачу
-        String assigner = "peter@example.com";
+        String assigner = "alice@hotmail.com";
         String title = "Delete Me";
         String status = "To Publish";
         createTask(assigner, title, status);
@@ -130,7 +131,7 @@ public class TasksTest extends BaseTest {
         TasksPage tasksPage = editTaskSteps.deleteTask();
         tasksSteps.assertTasksPageOpen(tasksPage);
 
-        tasksSteps.assertAlertVisibleWithText("Element deleted");
+        homeSteps.assertAlertVisibleWithText("Element deleted");
         tasksSteps.assertNumberTasks(countBefore - 1);
         tasksSteps.assertTaskNotExist(title);
     }
@@ -139,7 +140,8 @@ public class TasksTest extends BaseTest {
         CreateTaskPage createTaskPage = tasksSteps.openCreateTaskPage();
         createTaskSteps.assertCreateTaskPageOpen(createTaskPage);
 
-        TasksPage tasksPage = createTaskSteps.fillRequireFormFieldsAndSave(assigner, title, status);
+        createTaskSteps.fillRequireFormFieldsAndSave(assigner, title, status);
+        TasksPage tasksPage = homeSteps.openMenuTasks();
         tasksSteps.assertTasksPageOpen(tasksPage);
     }
 }
