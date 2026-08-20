@@ -58,8 +58,8 @@ public class TasksPage extends HomePage {
 
     public void selectOption(String optionText) {
         element.selectOptionFromList(optionsList, optionText);
-        columnComponents.forEach(ColumnComponent::waitForCardsStable);
         refreshColumnComponents();
+        columnComponents.forEach(ColumnComponent::waitForCardsStable);
     }
 
     public void clickStatus() {

@@ -33,15 +33,15 @@ public class EditTaskPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница редактирования задачи открыта.")
-    public void assertEditTaskPageOpen(EditTaskPage editTaskPage) {
-        this.editTaskPage = editTaskPage;
-        String taskId = editTaskPage.getTaskId();
+    public void assertEditTaskPageOpen(EditTaskPage localEditTaskPage) {
+        editTaskPage = localEditTaskPage;
+        String taskId = localEditTaskPage.getTaskId();
 
         String expectedUrl = ConfigManager.getConfig()
                 .taskEditEndpoint()
                 .replace("{int}", String.valueOf(taskId));
 
-        boolean isOpen = editTaskPage.getPageUrl()
+        boolean isOpen = localEditTaskPage.getPageUrl()
                 .contains(expectedUrl);
 
         Assertions.assertTrue(isOpen, "Страница редактирования задачи не открыта");

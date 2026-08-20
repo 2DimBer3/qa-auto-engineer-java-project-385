@@ -37,10 +37,8 @@ public class LoginPageSteps {
     }
 
     @Step("Проверить, что открыта страница авторизации")
-    public void assertPageOpen(LoginPage loginPage) {
-        this.loginPage = loginPage;
+    public void assertPageOpen(LoginPage localLoginPage) {
+        loginPage = localLoginPage;
         assertTrue(loginPage.isLoginPageDisplayed(), "Страница входа не открыта");
     }
-
-
 }

@@ -29,9 +29,9 @@ public class CreateLabelPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница создания лейбла открыта.")
-    public void assertCreateLabelPageOpen(CreateLabelPage createLabelPage) {
-        this.createLabelPage = createLabelPage;
-        boolean isOpen = createLabelPage.getPageUrl()
+    public void assertCreateLabelPageOpen(CreateLabelPage localCreateLabelPage) {
+        createLabelPage = localCreateLabelPage;
+        boolean isOpen = localCreateLabelPage.getPageUrl()
                 .contains(ConfigManager.getConfig()
                         .labelCreateEndpoint());
 
@@ -39,9 +39,9 @@ public class CreateLabelPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница редактирования лейбла открыта.")
-    public void assertEditLabelPageOpen(CreateLabelPage createLabelPage) {
-        this.createLabelPage = createLabelPage;
-        String actualUrl = createLabelPage.getPageUrl();
+    public void assertEditLabelPageOpen(CreateLabelPage localCreateLabelPage) {
+        createLabelPage = localCreateLabelPage;
+        String actualUrl = localCreateLabelPage.getPageUrl();
 
         String expectedEndpoint = ConfigManager.getConfig()
                 .labelEditEndpoint()

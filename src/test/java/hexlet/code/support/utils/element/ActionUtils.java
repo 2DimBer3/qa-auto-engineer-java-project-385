@@ -9,6 +9,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -22,18 +23,14 @@ public class ActionUtils {
         this.wait = wait;
     }
 
-    /**
-     * Клик по элементу с безопасным скроллом и обработкой перехвата.
-     * Используется pollingEvery, чтобы чаще проверять готовность элемента.
-     */
     public void click(WebElement element, String elementName) {
         try {
             wait.withMessage(String.format("Элемент '%s' не стал кликабельным за %s секунд",
-                            elementName, wait.getTimeout()))
+                            elementName,
+                            wait.getTimeout()))
                     .until(ExpectedConditions.elementToBeClickable(element));
-            ((JavascriptExecutor) driver).executeScript(
-                    "arguments[0].scrollIntoView({block: 'center'});", element
-            );
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});",
+                    element);
             element.click();
         } catch (Exception e) {
             // Fallback: клик через JS, если обычный клик перехвачен
@@ -47,9 +44,11 @@ public class ActionUtils {
         }
 
         if (elements.size() <= index) {
-            throw new IllegalArgumentException(
-                    String.format("Элемент с индексом %d не найден в коллекции '%s'. Размер коллекции: %d",
-                            index, elementName, elements.size())
+            throw new IllegalArgumentException(String.format(
+                    "Элемент с индексом %d не найден в коллекции '%s'. Размер коллекции: %d",
+                    index,
+                    elementName,
+                    elements.size())
             );
         }
 
@@ -61,7 +60,7 @@ public class ActionUtils {
     public void type(WebElement element, String text, String elementName) {
         wait.withMessage(String.format("Поле '%s' не стало видимым для ввода", elementName))
                 .until(d -> element.isDisplayed() && element.isEnabled());
-        typeValue(driver, element, text);
+        typeValue(element, text);
     }
 
     public String getText(WebElement element, String elementName) {
@@ -71,9 +70,7 @@ public class ActionUtils {
     }
 
     public List<String> getText(List<WebElement> collection, String elementName) {
-        return collection.stream()
-                .map(element -> getText(element, elementName))
-                .toList();
+        return collection.stream().map(element -> getText(element, elementName)).toList();
     }
 
     public String getValue(WebElement element, String elementName) {
@@ -83,9 +80,10 @@ public class ActionUtils {
     }
 
     public WebElement findElementByText(List<WebElement> elements, String expectedText, String description) {
-        return wait.withMessage(
-                        String.format("В коллекции '%s' не найден элемент с текстом '%s' за %s секунд",
-                                description, expectedText, wait.getTimeout()))
+        return wait.withMessage(String.format("В коллекции '%s' не найден элемент с текстом '%s' за %s секунд",
+                        description,
+                        expectedText,
+                        wait.getTimeout()))
                 .until(d -> {
                     for (WebElement element : elements) {
                         if (element.getText().trim().equals(expectedText)) {
@@ -99,7 +97,8 @@ public class ActionUtils {
     public boolean waitForCollectionNotEmpty(List<WebElement> elements, String description) {
         try {
             wait.withMessage(String.format("Коллекция '%s' не стала непустой за %s секунд",
-                            description, wait.getTimeout()))
+                            description,
+                            wait.getTimeout()))
                     .until(d -> !elements.isEmpty());
             return true;
         } catch (TimeoutException e) {
@@ -110,7 +109,8 @@ public class ActionUtils {
     public void waitForElementsStable(List<WebElement> elements, String description) {
         AtomicInteger prevSize = new AtomicInteger(-1);
         wait.withMessage(String.format("Список элементов '%s' не стабилизировался за %s секунд",
-                        description, wait.getTimeout()))
+                        description,
+                        wait.getTimeout()))
                 .until(d -> {
                     int size = elements.size();
                     if (size == prevSize.get()) {
@@ -134,25 +134,74 @@ public class ActionUtils {
         wait.withMessage("Исходный или целевой элемент не видимы для перетаскивания")
                 .until(d -> source.isDisplayed() && target.isDisplayed());
 
-        new Actions(driver)
-                .clickAndHold(source)
-                .moveToElement(target)
+        // Прокрутка обоих элементов в видимую область
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block: 'center', inline: 'center'});", target);
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block: 'center', inline: 'center'});", source);
+        pause(); // одна пауза после прокрутки
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        // Получаем координаты
+        Object srcResult = js.executeScript(
+                "var r = arguments[0].getBoundingClientRect(); "
+                        + "return {x: r.left + r.width/2, y: r.top + r.height/2};",
+                source);
+        Object tgtResult = js.executeScript(
+                "var r = arguments[0].getBoundingClientRect(); "
+                        + "return {x: r.left + r.width*0.3, y: r.top + r.height*0.5};",
+                target);
+
+        Map<?, ?> srcMap = (Map<?, ?>) srcResult;
+        Map<?, ?> tgtMap = (Map<?, ?>) tgtResult;
+
+        assert srcMap != null;
+        assert tgtMap != null;
+        int deltaX = ((Number) tgtMap.get("x")).intValue() - ((Number) srcMap.get("x")).intValue();
+        int deltaY = ((Number) tgtMap.get("y")).intValue() - ((Number) srcMap.get("y")).intValue();
+
+        int steps = 10;
+        int stepX = deltaX / steps;
+        int stepY = deltaY / steps;
+
+        Actions actions = new Actions(driver);
+        actions.moveToElement(source)
+                .clickAndHold()
+                .pause(500);
+
+        for (int i = 0; i < steps; i++) {
+            actions.moveByOffset(stepX, stepY).pause(150);
+        }
+
+        actions.pause(800)
                 .release()
+                .build()
                 .perform();
+
+        pause();
     }
 
-    private void typeValue(WebDriver driver, WebElement element, String inputText) {
+    private void pause() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void typeValue(WebElement element, String inputText) {
         element.click();
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
         // Нативный сеттер value, чтобы React зафиксировал изменение
-        js.executeScript(
-                "var nativeInputValueSetter = "
+        js.executeScript("var nativeInputValueSetter = "
                         + "Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;"
                         + "nativeInputValueSetter.call(arguments[0], arguments[1]);"
                         + "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));",
-                element, inputText
+                element,
+                inputText
         );
 
         // Небольшая пауза для обновления состояния (можно заменить на явное ожидание)
@@ -163,8 +212,7 @@ public class ActionUtils {
         }
 
         // Убираем фокус, чтобы форма валидировалась
-        js.executeScript(
-                "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));"
+        js.executeScript("arguments[0].dispatchEvent(new Event('change', { bubbles: true }));"
                         + "arguments[0].dispatchEvent(new Event('blur', { bubbles: true }));",
                 element
         );

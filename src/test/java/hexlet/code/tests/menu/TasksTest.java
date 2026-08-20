@@ -109,7 +109,7 @@ public class TasksTest extends BaseTest {
         createTask(assigner, title, initialStatus);
 
         //  Переместить задачу в соседнюю колонку и проверить, что она переместилась
-        String newStatus = "To Publish";
+        String newStatus = "Published";
         tasksSteps.moveTaskToColumn(title, newStatus);
 
         tasksSteps.assertTaskInColumn(title, newStatus);

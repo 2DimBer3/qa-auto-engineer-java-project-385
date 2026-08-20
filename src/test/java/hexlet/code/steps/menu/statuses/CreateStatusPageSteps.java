@@ -35,9 +35,9 @@ public class CreateStatusPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница создания статуса открыта.")
-    public void assertCreateStatusPageOpen(CreateStatusPage createStatusPage) {
-        this.createStatusPage = createStatusPage;
-        boolean isOpen = createStatusPage.getPageUrl()
+    public void assertCreateStatusPageOpen(CreateStatusPage localCreateStatusPage) {
+        createStatusPage = localCreateStatusPage;
+        boolean isOpen = localCreateStatusPage.getPageUrl()
                 .contains(ConfigManager.getConfig()
                         .statusCreateEndpoint());
 
@@ -45,9 +45,9 @@ public class CreateStatusPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница редактирования статуса открыта.")
-    public void assertEditStatusPageOpen(CreateStatusPage createStatusPage) {
-        this.createStatusPage = createStatusPage;
-        String actualUrl = createStatusPage.getPageUrl();
+    public void assertEditStatusPageOpen(CreateStatusPage localCreateStatusPage) {
+        createStatusPage = localCreateStatusPage;
+        String actualUrl = localCreateStatusPage.getPageUrl();
 
         String expectedEndpoint = ConfigManager.getConfig()
                 .statusEditEndpoint()

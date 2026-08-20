@@ -27,7 +27,7 @@ public class UsersPageSteps extends HomePageSteps {
     public CreateUserPage openEditUserForm(int userNumber) {
         return usersPage.clickUser(userNumber);
     }
-    
+
     @Step("Открыть форму редактирования последнего пользователя")
     public CreateUserPage openEditLastUserForm() {
         int userCount = usersPage.getUsersCount();
@@ -47,9 +47,9 @@ public class UsersPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница Users открыта.")
-    public void assertUsersPageOpen(UsersPage usersPage) {
-        this.usersPage = usersPage;
-        boolean isOpen = usersPage.isUserTableVisible();
+    public void assertUsersPageOpen(UsersPage localUsersPage) {
+        usersPage = localUsersPage;
+        boolean isOpen = localUsersPage.isUserTableVisible();
 
         Assertions.assertTrue(isOpen,
                 "Страница Users не открыта");

@@ -43,9 +43,9 @@ public class CreateUserPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница создания пользователя открыта.")
-    public void assertCreateUserPageOpen(CreateUserPage createUserPage) {
-        this.createUserPage = createUserPage;
-        String actualUrl = createUserPage.getPageUrl();
+    public void assertCreateUserPageOpen(CreateUserPage localCreateUserPage) {
+        createUserPage = localCreateUserPage;
+        String actualUrl = localCreateUserPage.getPageUrl();
         String expectedEndpoint = ConfigManager.getConfig()
                 .userCreateEndpoint();
 
@@ -56,9 +56,9 @@ public class CreateUserPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница редактирования пользователя открыта.")
-    public void assertEditUserPageOpen(CreateUserPage createUserPage) {
-        this.createUserPage = createUserPage;
-        String actualUrl = createUserPage.getPageUrl();
+    public void assertEditUserPageOpen(CreateUserPage localCreateUserPage) {
+        createUserPage = localCreateUserPage;
+        String actualUrl = localCreateUserPage.getPageUrl();
 
         String expectedEndpoint = ConfigManager.getConfig()
                 .userEditEndpoint()

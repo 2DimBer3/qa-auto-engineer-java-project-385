@@ -27,7 +27,7 @@ public class TaskStatusesPageSteps extends HomePageSteps {
     public CreateStatusPage openEditStatusForm(int rowNumber) {
         return taskStatusesPage.clickStatus(rowNumber);
     }
-    
+
     @Step("Открыть форму редактирования последнего статуса")
     public CreateStatusPage openEditLastStatusForm() {
         int statusesCount = taskStatusesPage.getStatusesCount();
@@ -47,9 +47,9 @@ public class TaskStatusesPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница Task Statuses открыта.")
-    public void assertTaskStatusesPageOpen(TaskStatusesPage taskStatusesPage) {
-        this.taskStatusesPage = taskStatusesPage;
-        boolean isOpen = taskStatusesPage.isStatusTableVisible();
+    public void assertTaskStatusesPageOpen(TaskStatusesPage localTaskStatusesPage) {
+        taskStatusesPage = localTaskStatusesPage;
+        boolean isOpen = localTaskStatusesPage.isStatusTableVisible();
 
         Assertions.assertTrue(isOpen, "Страница Task Statuses не открыта");
     }

@@ -27,7 +27,7 @@ public class LabelsPageSteps extends HomePageSteps {
     public CreateLabelPage openEditLabelForm(int rowNumber) {
         return labelPage.clickLabel(rowNumber);
     }
-    
+
     @Step("Открыть форму редактирования последнего лейбла")
     public CreateLabelPage openEditLastLabelForm() {
         int statusesCount = labelPage.getLabelsCount();
@@ -41,9 +41,9 @@ public class LabelsPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница Labels открыта.")
-    public void assertLabelsPageOpen(LabelsPage labelPage) {
-        this.labelPage = labelPage;
-        boolean isOpen = labelPage.isLabelTableVisible();
+    public void assertLabelsPageOpen(LabelsPage localLabelPage) {
+        labelPage = localLabelPage;
+        boolean isOpen = localLabelPage.isLabelTableVisible();
 
         Assertions.assertTrue(isOpen, "Страница Labels не открыта");
     }

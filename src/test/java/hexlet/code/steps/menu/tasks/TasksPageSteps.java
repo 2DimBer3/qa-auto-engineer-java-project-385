@@ -97,9 +97,9 @@ public class TasksPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница Tasks открыта.")
-    public void assertTasksPageOpen(TasksPage tasksPage) {
-        this.tasksPage = tasksPage;
-        boolean isOpen = tasksPage.isBoardVisible();
+    public void assertTasksPageOpen(TasksPage localTasksPage) {
+        tasksPage = localTasksPage;
+        boolean isOpen = localTasksPage.isBoardVisible();
 
         Assertions.assertTrue(isOpen, "Страница Tasks не открыта");
     }
@@ -139,7 +139,7 @@ public class TasksPageSteps extends HomePageSteps {
                 .toList();
 
         cards.forEach(card -> {
-            ShowTaskPage showTaskPage = card.clickShow();
+            showTaskPage = card.clickShow();
             String actualAssigner = showTaskPage.getAssigner();
 
             Assertions.assertEquals(expectedAssigner, actualAssigner,
@@ -152,7 +152,7 @@ public class TasksPageSteps extends HomePageSteps {
         List<String> cardTitles = getAllTaskNames();
 
         for (String title : cardTitles) {
-            this.showTaskPage = openTaskForView(title);
+            showTaskPage = openTaskForView(title);
             assertTaskHasLabel(title, expectedLabel);
             goBack();
         }

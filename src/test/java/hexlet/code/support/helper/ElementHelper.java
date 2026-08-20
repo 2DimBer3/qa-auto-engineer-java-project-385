@@ -73,12 +73,7 @@ public class ElementHelper {
         return checks.containsText(element, expectedText, elementName);
     }
 
-    public boolean attributeContains(WebElement element, String attrName, String partialValue, String elementName) {
-        return checks.attributeContains(element, attrName, partialValue, elementName);
-    }
-
     public void dragAndDrop(WebElement source, WebElement target) {
         actions.dragAndDrop(source, target);
     }
-
 }

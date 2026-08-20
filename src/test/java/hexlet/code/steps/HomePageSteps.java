@@ -41,8 +41,8 @@ public class HomePageSteps {
     }
 
     @Step("Проверить, что открыта главная страница")
-    public void assertPageOpen(HomePage homePage) {
-        this.homePage = homePage;
+    public void assertPageOpen(HomePage localHomePage) {
+        homePage = localHomePage;
         boolean isOpen = homePage.isProfileButtonVisible();
 
         Assertions.assertTrue(isOpen,

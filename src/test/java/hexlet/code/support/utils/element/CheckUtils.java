@@ -56,18 +56,4 @@ public class CheckUtils {
             return false;
         }
     }
-
-    public boolean attributeContains(WebElement element, String attrName, String partialValue, String elementName) {
-        try {
-            wait.withMessage(String.format("Атрибут '%s' элемента '%s' не содержит '%s'",
-                            attrName, elementName, partialValue))
-                    .until(d -> {
-                        String actual = element.getAttribute(attrName);
-                        return actual != null && actual.contains(partialValue);
-                    });
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
 }

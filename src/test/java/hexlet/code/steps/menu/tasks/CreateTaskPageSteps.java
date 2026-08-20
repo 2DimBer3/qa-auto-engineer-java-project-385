@@ -33,7 +33,7 @@ public class CreateTaskPageSteps extends HomePageSteps {
         fillTitle(title);
         fillStatus(status);
         clickSave();
-   }
+    }
 
     @Step("Нажать на кнопку `Save`")
     public void clickSave() {
@@ -41,9 +41,9 @@ public class CreateTaskPageSteps extends HomePageSteps {
     }
 
     @Step("Проверить, что страница создания задачи открыта.")
-    public void assertCreateTaskPageOpen(CreateTaskPage createTaskPage) {
-        this.createTaskPage = createTaskPage;
-        boolean isOpen = createTaskPage.getPageUrl()
+    public void assertCreateTaskPageOpen(CreateTaskPage localCreateTaskPage) {
+        createTaskPage = localCreateTaskPage;
+        boolean isOpen = localCreateTaskPage.getPageUrl()
                 .contains(ConfigManager.getConfig()
                         .taskCreateEndpoint());
 
