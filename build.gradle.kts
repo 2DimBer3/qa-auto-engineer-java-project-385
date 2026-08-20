@@ -28,7 +28,7 @@ dependencies {
     testImplementation("org.apache.logging.log4j:log4j-core:2.22.0")
 
     testImplementation("io.qameta.allure:allure-junit5:2.29.1")
-    testImplementation("org.aspectj:aspectjweaver:1.9.22.1")
+    testImplementation("org.aspectj:aspectjweaver:1.9.25")
 }
 
 sonar {
